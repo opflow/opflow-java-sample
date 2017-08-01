@@ -1,8 +1,7 @@
 package com.devebot.opflow.example;
 
-import java.util.HashMap;
 import java.util.Map;
-import com.google.gson.Gson;
+import com.devebot.opflow.OpflowHelper;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowRpcMaster;
 import com.devebot.opflow.OpflowRpcResult;
@@ -11,15 +10,7 @@ import com.devebot.opflow.OpflowUtil;
 public class OpflowRpcExampleMaster {
 
     public static void main(String[] argv) throws Exception {
-        final Gson gson = new Gson();
-        final HashMap<String, Object> flowParams = new HashMap<String, Object>();
-        flowParams.put("uri", "amqp://master:zaq123edcx@192.168.56.56?frameMax=0x1000");
-        flowParams.put("exchangeName", "tdd-opflow-exchange");
-        flowParams.put("routingKey", "sample");
-        flowParams.put("operatorName", "tdd-opflow-queue");
-        flowParams.put("responseName", "tdd-opflow-feedback");
-
-        final OpflowRpcMaster rpc = new OpflowRpcMaster(flowParams);
+        final OpflowRpcMaster rpc = OpflowHelper.createRpcMaster();
         
         System.out.println("[+] ExampleMaster request");
 
