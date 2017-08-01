@@ -23,7 +23,7 @@ public class OpflowRpcExampleMaster {
             @Override
             public void transform(Map<String, Object> opts) {
                 opts.put("timeout", 5);
-                opts.put("mode", "standalone");
+                //Sopts.put("mode", "standalone");
             }
         }));
 
@@ -32,7 +32,7 @@ public class OpflowRpcExampleMaster {
             System.out.println("[-] message1 received: " + msg.getContentAsString());
         }
         
-        OpflowRpcResult result2 = rpc.request("fibonacci2", OpflowUtil.buildJson(new OpflowUtil.MapListener() {
+        OpflowRpcResult result2 = rpc.request("fib", OpflowUtil.buildJson(new OpflowUtil.MapListener() {
             @Override
             public void transform(Map<String, Object> opts) {
                 opts.put("number", 30);
@@ -41,7 +41,7 @@ public class OpflowRpcExampleMaster {
             @Override
             public void transform(Map<String, Object> opts) {
                 opts.put("timeout", 30);
-                //opts.put("mode", "standalone");
+                opts.put("mode", "standalone");
             }
         }));
         

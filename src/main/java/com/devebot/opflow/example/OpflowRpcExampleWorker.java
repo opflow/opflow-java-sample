@@ -24,7 +24,7 @@ public class OpflowRpcExampleWorker {
             }
         });
         
-        rpc.process("fibonacci", new OpflowRpcListener() {
+        rpc.process(new String[] {"fibonacci", "fib"}, new OpflowRpcListener() {
             @Override
             public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
                 JsonObject jsonObject = (JsonObject)jsonParser.parse(message.getContentAsString());
