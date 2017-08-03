@@ -10,7 +10,7 @@ import com.devebot.opflow.OpflowRpcListener;
 import com.devebot.opflow.OpflowRpcResponse;
 import com.devebot.opflow.OpflowRpcWorker;
 
-public class OpflowRpcExampleWorker {
+public class FibonacciRpcWorker {
 
     public static void main(String[] argv) throws Exception {
         final Gson gson = new Gson();

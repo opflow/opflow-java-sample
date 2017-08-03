@@ -7,7 +7,7 @@ import com.devebot.opflow.OpflowRpcMaster;
 import com.devebot.opflow.OpflowRpcRequest;
 import com.devebot.opflow.OpflowUtil;
 
-public class OpflowRpcExampleMaster {
+public class FibonacciRpcMaster {
 
     public static void main(String[] argv) throws Exception {
         final OpflowRpcMaster rpc = OpflowHelper.createRpcMaster();
