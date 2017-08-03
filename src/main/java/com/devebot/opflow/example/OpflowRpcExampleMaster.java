@@ -23,7 +23,7 @@ public class OpflowRpcExampleMaster {
             @Override
             public void transform(Map<String, Object> opts) {
                 opts.put("timeout", 5);
-                //Sopts.put("mode", "standalone");
+                //opts.put("mode", "standalone");
             }
         }));
 
@@ -40,7 +40,7 @@ public class OpflowRpcExampleMaster {
         }), OpflowUtil.buildOptions(new OpflowUtil.MapListener() {
             @Override
             public void transform(Map<String, Object> opts) {
-                opts.put("timeout", 30);
+                opts.put("timeout", 10);
                 opts.put("mode", "standalone");
             }
         }));
