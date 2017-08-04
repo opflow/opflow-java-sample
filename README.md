@@ -1,4 +1,4 @@
-
+# opflow-java-example
 
 ## Prerequisites
 
@@ -41,17 +41,31 @@ git clone https://github.com/devebot/opflow-java-example.git
 Change to project folder and install dependencies using `maven`:
 
 ```shell
-$ mvn compile
+mvn compile
 ```
 
 To run worker, use the following command:
 
-```
-$ mvn compile exec:exec -Dworker
+```shell
+mvn compile exec:exec -Dworker
 ```
 
 And master:
 
+```shell
+mvn compile exec:exec -Dmaster
 ```
-$ mvn compile exec:exec -Dmaster
+
+## Run BDD test
+
+Compiles source code and installs dependencies:
+
+```shell
+mvn compile
+```
+
+Invokes maven to run integration tests:
+
+```shell
+mvn verify
 ```
