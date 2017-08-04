@@ -4,7 +4,7 @@ import com.devebot.opflow.OpflowRpcRequest;
 import com.devebot.opflow.OpflowRpcResult;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.example.FibonacciGenerator;
-import com.devebot.opflow.example.FibonacciRpcImpl;
+import com.devebot.opflow.example.FibonacciRpcMaster;
 import com.devebot.opflow.exception.OpflowConstructorException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -24,13 +24,13 @@ import org.jbehave.core.annotations.When;
 public class FibonacciRpcMasterSteps {
     
     private final JsonParser jsonParser = new JsonParser();
-    private FibonacciRpcImpl master;
+    private FibonacciRpcMaster master;
     private final Map<String, OpflowRpcRequest> requests = new HashMap<String, OpflowRpcRequest>();
     private final Map<String, Integer> inputs = new HashMap<String, Integer>();
     
     @Given("a Fibonacci master")
     public void givenAFibonacciMaster() throws OpflowConstructorException {
-        master = new FibonacciRpcImpl();
+        master = new FibonacciRpcMaster();
     }
     
     @When("I make a request named $requestName with number: $number")
