@@ -27,6 +27,11 @@ public class FibonacciGenerator {
         return new Result(f, c, n);
     }
     
+    public Result finish() {
+        while(next()) {}
+        return result();
+    }
+    
     public class Result {
         private final long value;
         private final int step;
