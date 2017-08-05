@@ -1,4 +1,4 @@
-package com.devebot.opflow.example.steps;
+package com.devebot.opflow.example.bdd.steps;
 
 import com.devebot.opflow.OpflowRpcRequest;
 import com.devebot.opflow.OpflowRpcResult;

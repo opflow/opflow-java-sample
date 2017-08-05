@@ -8,6 +8,7 @@ import com.devebot.opflow.OpflowRpcResult;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowConstructorException;
 import java.util.Map;
+import java.util.Random;
 
 public class FibonacciRpcMaster {
 
@@ -43,6 +44,11 @@ public class FibonacciRpcMaster {
         OpflowRpcRequest req1 = rpc.request(20);
         OpflowRpcRequest req2 = rpc.request(30);
         
+        OpflowRpcRequest[] reqs = new OpflowRpcRequest[100];
+        for(int i = 0; i<reqs.length; i++) {
+            reqs[i] = rpc.request(random(20, 40));
+        }
+        
         // OpflowRpcRequest object works as an Interator<OpflowMessage>
         while(req1.hasNext()) {
             OpflowMessage msg = req1.next();
@@ -58,7 +64,20 @@ public class FibonacciRpcMaster {
             System.out.println("[-] message2 percent: " + step.getPercent());
         }
         System.out.println("[-] message2 result: " + result2.getValueAsString());
+        System.out.println();
+        
+        for(int i = 0; i<reqs.length; i++) {
+            OpflowRpcResult resultx = OpflowUtil.exhaustRequest(reqs[i]);
+            System.out.println("[-] reqs[" + i + "] result: " + resultx.getValueAsString() +
+                    " from worker: " + resultx.getWorkerTag());
+        }
         
         System.out.println("[-] ExampleMaster has finished");
+    }
+    
+    private static final Random RANDOM = new Random();
+    
+    private static int random(int min, int max) {
+        return RANDOM.nextInt(max + 1 - min) + min;
     }
 }

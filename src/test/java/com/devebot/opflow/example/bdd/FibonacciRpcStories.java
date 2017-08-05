@@ -1,7 +1,7 @@
-package com.devebot.opflow.example;
+package com.devebot.opflow.example.bdd;
 
-import com.devebot.opflow.example.steps.FibonacciRpcMasterSteps;
-import com.devebot.opflow.example.steps.FibonacciRpcWorkerSteps;
+import com.devebot.opflow.example.bdd.steps.FibonacciRpcMasterSteps;
+import com.devebot.opflow.example.bdd.steps.FibonacciRpcWorkerSteps;
 import java.util.Arrays;
 import java.util.List;
 import org.jbehave.core.configuration.Configuration;
