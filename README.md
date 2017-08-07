@@ -56,6 +56,20 @@ And master:
 mvn compile exec:exec -Dmaster
 ```
 
+## Run TDD test
+
+Compiles source code and installs dependencies:
+
+```shell
+mvn compile
+```
+
+Invokes maven to run unit tests:
+
+```shell
+mvn test
+```
+
 ## Run BDD test
 
 Compiles source code and installs dependencies:
