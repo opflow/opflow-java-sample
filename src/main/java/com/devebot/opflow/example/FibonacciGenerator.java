@@ -10,6 +10,8 @@ public class FibonacciGenerator {
     private long f = 0, f_1 = 0, f_2 = 0;
     
     public FibonacciGenerator(int number) {
+        if (number < 0) throw new IllegalArgumentException("number is negative");
+        if (number > 50) throw new IllegalArgumentException("exceeding limit number");
         this.n = number;
     }
     
