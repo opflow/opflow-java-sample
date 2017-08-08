@@ -43,11 +43,11 @@ public class FibonacciRpcWorker {
                 response.emitStarted();
 
                 int number = Integer.parseInt(jsonObject.get("number").toString());
-                FibonacciGenerator fibonacci = new FibonacciGenerator(number);
+                FibonacciGenerator fibonacci = new FibonacciGenerator(number, 10, 20);
 
                 while(fibonacci.next()) {
                     FibonacciGenerator.Result r = fibonacci.result();
-                    response.emitProgress(r.getStep(), r.getNumber(), null);
+                    response.emitProgress(r.getStep(), r.getNumber());
                 }
 
                 String result = gson.toJson(fibonacci.result());
@@ -60,6 +60,10 @@ public class FibonacciRpcWorker {
         });
         
         return info;
+    }
+    
+    public void close() {
+        worker.close();
     }
     
     public static void main(String[] argv) throws Exception {

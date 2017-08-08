@@ -19,7 +19,7 @@ public class FibonacciRpcMaster {
     }
     
     public OpflowRpcRequest request(final int number) {
-        return request(number, 10000);
+        return request(number, 60000);
     }
     
     public OpflowRpcRequest request(final int number, final long timeout) {
@@ -34,6 +34,10 @@ public class FibonacciRpcMaster {
                 opts.put("timeout", timeout);
             }
         }));
+    }
+    
+    public void close() {
+        master.close();
     }
     
     public static void main(String[] argv) throws Exception {
@@ -71,6 +75,8 @@ public class FibonacciRpcMaster {
             System.out.println("[-] reqs[" + i + "] result: " + resultx.getValueAsString() +
                     " from worker: " + resultx.getWorkerTag());
         }
+        
+        rpc.close();
         
         System.out.println("[-] ExampleMaster has finished");
     }
