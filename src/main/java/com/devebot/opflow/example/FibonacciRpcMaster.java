@@ -48,7 +48,7 @@ public class FibonacciRpcMaster {
         OpflowRpcRequest req1 = rpc.request(20);
         OpflowRpcRequest req2 = rpc.request(30);
         
-        OpflowRpcRequest[] reqs = new OpflowRpcRequest[100];
+        OpflowRpcRequest[] reqs = new OpflowRpcRequest[10];
         for(int i = 0; i<reqs.length; i++) {
             reqs[i] = rpc.request(random(20, 40));
         }
@@ -71,9 +71,18 @@ public class FibonacciRpcMaster {
         System.out.println();
         
         for(int i = 0; i<reqs.length; i++) {
-            OpflowRpcResult resultx = OpflowUtil.exhaustRequest(reqs[i]);
-            System.out.println("[-] reqs[" + i + "] result: " + resultx.getValueAsString() +
-                    " from worker: " + resultx.getWorkerTag());
+            OpflowRpcResult rsts = OpflowUtil.exhaustRequest(reqs[i]);
+            System.out.println("[-] reqs[" + i + "] result: " + rsts.getValueAsString() +
+                    " from worker: " + rsts.getWorkerTag());
+        }
+        System.out.println();
+        
+        OpflowRpcRequest reqx = rpc.request(50);
+        
+        while(reqx.hasNext()) {
+            OpflowMessage msg = reqx.next();
+            System.out.println("[-] messagex received: " + msg.getContentAsString() + 
+                    " / workerTag: " + msg.getInfo().get("workerTag"));
         }
         
         rpc.close();

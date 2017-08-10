@@ -35,7 +35,7 @@ sudo apt-get install rabbitmq-server
 Clone source code from `github`:
 
 ```shell
-git clone https://github.com/devebot/opflow-java-example.git
+git clone https://github.com/opflow/opflow-java-example.git
 ```
 
 Change to project folder and install dependencies using `maven`:
