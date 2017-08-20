@@ -36,6 +36,10 @@ public class FibonacciRpcMaster {
         }));
     }
     
+    public String checkState() {
+        return master.check().getConnectionState() == 1 ? "opened" : "closed";
+    }
+    
     public void close() {
         master.close();
     }

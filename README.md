@@ -30,7 +30,7 @@ Install rabbitmq-server package:
 sudo apt-get install rabbitmq-server
 ```
 
-## Clone and Run example
+## Run example
 
 Clone source code from `github`:
 
@@ -47,13 +47,19 @@ mvn compile
 To run worker, use the following command:
 
 ```shell
-mvn compile exec:exec -Dworker
+mvn compile exec:exec -Pworker
 ```
 
 And master:
 
 ```shell
-mvn compile exec:exec -Dmaster
+mvn compile exec:exec -Pmaster
+```
+
+And Pub/Sub:
+
+```shell
+mvn compile exec:exec -Ppubsub
 ```
 
 ## Run TDD test

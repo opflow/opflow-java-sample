@@ -1,6 +1,6 @@
 package com.devebot.opflow.example;
 
-import com.devebot.opflow.OpflowBroker;
+import com.devebot.opflow.OpflowEngine;
 import com.devebot.opflow.OpflowHelper;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowRpcListener;
@@ -24,8 +24,8 @@ public class FibonacciRpcWorker {
         worker = OpflowHelper.createRpcWorker();
     }
     
-    public OpflowBroker.ConsumerInfo process() {
-        OpflowBroker.ConsumerInfo info = worker.process(new OpflowRpcListener() {
+    public OpflowEngine.ConsumerInfo process() {
+        OpflowEngine.ConsumerInfo info = worker.process(new OpflowRpcListener() {
             @Override
             public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
                 LOG.debug("[+] Routine input: " + message.getContentAsString());
@@ -81,6 +81,10 @@ public class FibonacciRpcWorker {
         });
         
         return info;
+    }
+    
+    public String checkState() {
+        return worker.check().getConnectionState() == 1 ? "opened" : "closed";
     }
     
     public void close() {

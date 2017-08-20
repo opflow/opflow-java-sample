@@ -57,4 +57,14 @@ public class FibonacciRpcMasterSteps {
         long value = Long.parseLong(jsonObject.get("value").toString());
         assertThat(value, equalTo(fibResult.getValue()));
     }
+    
+    @When("I close RpcMaster")
+    public void closeRpcMaster() {
+        master.close();
+    }
+    
+    @Then("the RpcMaster's connection status is '$status'")
+    public void checkRpcMasterState(@Named("status") String status) {
+        assertThat(master.checkState(), equalTo(status));
+    }
 }
