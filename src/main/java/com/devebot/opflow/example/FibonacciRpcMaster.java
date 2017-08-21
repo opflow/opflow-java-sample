@@ -60,8 +60,12 @@ public class FibonacciRpcMaster {
         // OpflowRpcRequest object works as an Interator<OpflowMessage>
         while(req1.hasNext()) {
             OpflowMessage msg = req1.next();
-            System.out.println("[-] message1 received: " + msg.getContentAsString() + 
+            if (msg.getInfo().get("workerTag") == null) {
+                System.out.println("[-] message1 received: " + msg.getContentAsString());
+            } else {
+                System.out.println("[-] message1 received: " + msg.getContentAsString() + 
                     " / workerTag: " + msg.getInfo().get("workerTag"));
+            }
         }
         System.out.println();
         
@@ -85,8 +89,12 @@ public class FibonacciRpcMaster {
         
         while(reqx.hasNext()) {
             OpflowMessage msg = reqx.next();
-            System.out.println("[-] messagex received: " + msg.getContentAsString() + 
+            if (msg.getInfo().get("workerTag") == null) {
+                System.out.println("[-] messagex received: " + msg.getContentAsString());
+            } else {
+                System.out.println("[-] messagex received: " + msg.getContentAsString() + 
                     " / workerTag: " + msg.getInfo().get("workerTag"));
+            }
         }
         
         rpc.close();

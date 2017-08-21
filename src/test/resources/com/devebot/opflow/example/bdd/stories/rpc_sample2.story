@@ -10,6 +10,8 @@ When I close RpcWorker(demo1)
 Then the RpcWorker(demo1)'s connection status is 'closed'
 When I close RpcWorker(demo2)
 Then the RpcWorker(demo2)'s connection status is 'closed'
+When I close RpcMaster
+Then the RpcMaster's connection status is 'closed'
 
 Scenario: Get input data from Example table
 
