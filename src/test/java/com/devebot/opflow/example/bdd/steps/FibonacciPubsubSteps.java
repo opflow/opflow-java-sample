@@ -31,23 +31,32 @@ public class FibonacciPubsubSteps {
     private final Map<String, ConsumerInfo> consumerTags = new HashMap<String, ConsumerInfo>();
     private final List<Integer> failedNumbers = new ArrayList<Integer>();
     
-    @Given("a Fibonacci PubsubHandler: $pubsubName")
-    public void givenDefaultFibonacciPubsubHandler(final String pubsubName) throws OpflowConstructorException {
-        FibonacciPubsubHandler pubsub = new FibonacciPubsubHandler();
+    @Given("a Fibonacci PubsubHandler($pubsubName)")
+    public void givenDefaultFibonacciPubsubHandler(@Named("pubsubName") final String pubsubName) 
+            throws OpflowConstructorException {
+        givenFibonacciPubsubHandler(pubsubName, null);
+    }
+    
+    @Given("a Fibonacci PubsubHandler($pubsubName) with properties file: '$propFile'")
+    public void givenFibonacciPubsubHandler(@Named("pubsubName") final String pubsubName, 
+            @Named("propFile") final String propFile) throws OpflowConstructorException {
+        FibonacciPubsubHandler pubsub = (propFile == null) ? 
+                new FibonacciPubsubHandler() : new FibonacciPubsubHandler(propFile);
         pubsub.setCountdown(new OpflowTask.Countdown());
         pubsubs.put(pubsubName, pubsub);
-        consumerTags.put(pubsubName, pubsub.subscribe());
         failedNumbers.clear();
     }
     
-    @Given("a Fibonacci PubsubHandler named '$pubsubName' with properties file: '$propFile'")
-    public void givenFibonacciPubsubHandler(@Named("pubsubName") final String pubsubName, 
-            @Named("propFile") final String propFile) throws OpflowConstructorException {
-        FibonacciPubsubHandler pubsub = new FibonacciPubsubHandler(propFile);
-        pubsub.setCountdown(new OpflowTask.Countdown());
-        pubsubs.put(pubsubName, pubsub);
-        consumerTags.put(pubsubName, pubsub.subscribe());
-        failedNumbers.clear();
+    @Given("'$number' subscribers in PubsubHandler($pubsubName)")
+    public void givenSubscribers(@Named("pubsubName") final String pubsubName, 
+            @Named("number") final int number) throws OpflowConstructorException {
+        pubsubs.get(pubsubName).subscribe(number);
+    }
+    
+    @Then("PubsubHandler($pubsubName) has exactly '$number' consumers")
+    public void countSubscribers(@Named("pubsubName") final String pubsubName, 
+            @Named("number") final int number) throws OpflowConstructorException {
+        assertThat(pubsubs.get(pubsubName).getNumberOfConsumers(), equalTo(number));
     }
     
     @Given("a failed number arrays '$failedNumbers'")
@@ -61,7 +70,7 @@ public class FibonacciPubsubSteps {
         failedNumbers.addAll(Arrays.asList(failedNumbersInt));
     }
     
-    @When("I publish '$total' random messages to PubsubHandler named '$pubsubName'")
+    @When("I publish '$total' random messages to PubsubHandler($pubsubName)")
     public void publishNumber(@Named("total") final int total, 
             @Named("pubsubName") final String pubsubName) {
         if (total < failedNumbers.size()) throw new IllegalArgumentException();
@@ -89,19 +98,19 @@ public class FibonacciPubsubSteps {
         pubsubs.get(pubsubName).getCountdown().bingo();
     }
     
-    @Then("PubsubHandler named '$pubsubName' receives '$total' messages")
+    @Then("PubsubHandler($pubsubName) receives '$total' messages")
     public void totalReceivedMessages(@Named("pubsubName") final String pubsubName, 
             @Named("total") final int total) {
         System.out.println("[*] Received total: " + pubsubs.get(pubsubName).getCountdown().getCount());
         assertThat(pubsubs.get(pubsubName).getCountdown().getCount(), equalTo(total));
     }
     
-    @When("I close PubsubHandler named '$pubsubName'")
+    @When("I close PubsubHandler($pubsubName)")
     public void closePubsubHandler(@Named("pubsubName") String pubsubName) {
         pubsubs.get(pubsubName).close();
     }
     
-    @Then("the PubsubHandler named '$pubsubName' connection is '$status'")
+    @Then("the PubsubHandler($pubsubName)'s connection is '$status'")
     public void checkPubsubHandler(@Named("pubsubName") String pubsubName, @Named("status") String status) {
         assertThat(pubsubs.get(pubsubName).checkState(), equalTo(status));
     }
