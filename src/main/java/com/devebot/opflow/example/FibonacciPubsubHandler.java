@@ -101,10 +101,19 @@ public class FibonacciPubsubHandler {
     public static void main(String[] argv) throws Exception {
         final FibonacciPubsubHandler pubsub = new FibonacciPubsubHandler();
         
+        System.out.println("[+] Start a Subscriber");
         pubsub.subscribe();
         
+        System.out.println("[-] publish 20 messages");
         for(int i=20; i<40; i++) {
             pubsub.publish(i);
         }
+        
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ie) {}
+        
+        pubsub.close();
+        System.out.println("[-] Pub/sub has been done!");
     }
 }
