@@ -4,7 +4,7 @@ import com.devebot.opflow.OpflowEngine.ConsumerInfo;
 import com.devebot.opflow.OpflowTask;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.example.FibonacciPubsubHandler;
-import com.devebot.opflow.exception.OpflowConstructorException;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,13 +33,13 @@ public class FibonacciPubsubSteps {
     
     @Given("a Fibonacci PubsubHandler($pubsubName)")
     public void givenDefaultFibonacciPubsubHandler(@Named("pubsubName") final String pubsubName) 
-            throws OpflowConstructorException {
+            throws OpflowBootstrapException {
         givenFibonacciPubsubHandler(pubsubName, null);
     }
     
     @Given("a Fibonacci PubsubHandler($pubsubName) with properties file: '$propFile'")
     public void givenFibonacciPubsubHandler(@Named("pubsubName") final String pubsubName, 
-            @Named("propFile") final String propFile) throws OpflowConstructorException {
+            @Named("propFile") final String propFile) throws OpflowBootstrapException {
         FibonacciPubsubHandler pubsub = (propFile == null) ? 
                 new FibonacciPubsubHandler() : new FibonacciPubsubHandler(propFile);
         pubsub.setCountdown(new OpflowTask.Countdown());
@@ -49,19 +49,19 @@ public class FibonacciPubsubSteps {
     
     @Given("'$number' subscribers in PubsubHandler($pubsubName)")
     public void givenSubscribers(@Named("pubsubName") final String pubsubName, 
-            @Named("number") final int number) throws OpflowConstructorException {
+            @Named("number") final int number) throws OpflowBootstrapException {
         pubsubs.get(pubsubName).subscribe(number);
     }
     
     @Then("PubsubHandler($pubsubName) has exactly '$number' consumers")
     public void countSubscribers(@Named("pubsubName") final String pubsubName, 
-            @Named("number") final int number) throws OpflowConstructorException {
+            @Named("number") final int number) throws OpflowBootstrapException {
         assertThat(pubsubs.get(pubsubName).getNumberOfConsumers(), equalTo(number));
     }
     
     @Given("a failed number arrays '$failedNumbers'")
     public void givenAFailedNumberArrays(@Named("pubsubName") final String pubsubName, 
-            @Named("failedNumbers") final String failedNumbersStr) throws OpflowConstructorException {
+            @Named("failedNumbers") final String failedNumbersStr) throws OpflowBootstrapException {
         String[] failedNumbersArr = OpflowUtil.splitByComma(failedNumbersStr);
         Integer[] failedNumbersInt = new Integer[failedNumbersArr.length];
         for(int i=0; i<failedNumbersArr.length; i++) {

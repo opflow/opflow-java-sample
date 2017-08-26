@@ -6,11 +6,12 @@ import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowPubsubHandler;
 import com.devebot.opflow.OpflowPubsubListener;
 import com.devebot.opflow.OpflowTask;
-import com.devebot.opflow.exception.OpflowConstructorException;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowOperationException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,32 +24,49 @@ public class FibonacciPubsubHandler {
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciPubsubHandler.class);
     private final JsonParser jsonParser = new JsonParser();
     private final OpflowPubsubHandler handler;
+    private final FibonacciSetting setting;
     private final OpflowPubsubListener listener = new OpflowPubsubListener() {
         @Override
         public void processMessage(OpflowMessage message) throws IOException {
             String content = new String(message.getContent(), "UTF-8");
+            System.out.println(" [-] Received setting: '" + content + "'");
             JsonObject jsonObject = (JsonObject)jsonParser.parse(content);
-            int number = Integer.parseInt(jsonObject.get("number").toString());
+            int numberMax = Integer.parseInt(jsonObject.get("numberMax").toString());
 
             if (countdown != null) countdown.check();
-            if (number < 0) throw new OpflowOperationException("number should be positive");
-            if (number > 40) throw new OpflowOperationException("number exceeding limit (40)");
-            FibonacciGenerator fibonacci = new FibonacciGenerator(number);
-            System.out.println(" [-] Received '" + content + "', result: " + fibonacci.finish().getValue());
+
+            if (numberMax <= 0) throw new OpflowOperationException("numberMax should be positive");
+            if (numberMax > 50) throw new OpflowOperationException("numberMax exceeding limit (50)");
+            
+            if (0< numberMax && numberMax <= 50 && setting != null) {
+                setting.setNumberMax(numberMax);
+                System.out.println(" [-] numberMax: '" + numberMax + "' has been set to setting object");
+            }
         }
     };
     private OpflowTask.Countdown countdown;
     
-    public FibonacciPubsubHandler() throws OpflowConstructorException {
-        handler = OpflowHelper.createPubsubHandler();
+    public FibonacciPubsubHandler() throws OpflowBootstrapException {
+        this(null, null);
     }
     
-    public FibonacciPubsubHandler(String propFile) throws OpflowConstructorException {
-        handler = OpflowHelper.createPubsubHandler(propFile);
+    public FibonacciPubsubHandler(FibonacciSetting setting) throws OpflowBootstrapException {
+        this(setting, null);
     }
     
-    public void publish(int number) {
-        handler.publish("{ \"number\": " + number + " }");
+    public FibonacciPubsubHandler(String propFile) throws OpflowBootstrapException {
+        this(null, propFile);
+    }
+    
+    public FibonacciPubsubHandler(FibonacciSetting setting, String propFile) throws OpflowBootstrapException {
+        Properties props = new Properties();
+        props.setProperty("subscriberLimit", "1");
+        this.handler = OpflowHelper.createPubsubHandler(propFile, props, true);
+        this.setting = (setting != null) ? setting : new FibonacciSetting();
+    }
+    
+    public void publish(int numberMax) {
+        handler.publish("{ \"numberMax\": " + numberMax + " }");
     }
     
     public OpflowEngine.ConsumerInfo subscribe() {

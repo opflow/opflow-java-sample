@@ -6,7 +6,7 @@ import com.devebot.opflow.OpflowRpcMaster;
 import com.devebot.opflow.OpflowRpcRequest;
 import com.devebot.opflow.OpflowRpcResult;
 import com.devebot.opflow.OpflowUtil;
-import com.devebot.opflow.exception.OpflowConstructorException;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,7 +14,7 @@ public class FibonacciRpcMaster {
 
     private final OpflowRpcMaster master;
     
-    public FibonacciRpcMaster() throws OpflowConstructorException {
+    public FibonacciRpcMaster() throws OpflowBootstrapException {
         master = OpflowHelper.createRpcMaster();
     }
     

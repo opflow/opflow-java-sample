@@ -5,7 +5,7 @@ import com.devebot.opflow.OpflowRpcResult;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.example.FibonacciGenerator;
 import com.devebot.opflow.example.FibonacciRpcMaster;
-import com.devebot.opflow.exception.OpflowConstructorException;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class FibonacciRpcMasterSteps {
     private final Map<String, Integer> inputs = new HashMap<String, Integer>();
     
     @Given("a Fibonacci master")
-    public void givenAFibonacciMaster() throws OpflowConstructorException {
+    public void givenAFibonacciMaster() throws OpflowBootstrapException {
         master = new FibonacciRpcMaster();
     }
     

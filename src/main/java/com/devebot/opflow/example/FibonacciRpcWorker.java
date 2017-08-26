@@ -8,7 +8,7 @@ import com.devebot.opflow.OpflowRpcResponse;
 import com.devebot.opflow.OpflowRpcWorker;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.OpflowUtil.MapListener;
-import com.devebot.opflow.exception.OpflowConstructorException;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowOperationException;
 import java.io.IOException;
 import java.util.Map;
@@ -19,9 +19,19 @@ public class FibonacciRpcWorker {
 
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciRpcWorker.class);
     private final OpflowRpcWorker worker;
+    private final FibonacciSetting setting;
     
-    public FibonacciRpcWorker() throws OpflowConstructorException {
-        worker = OpflowHelper.createRpcWorker();
+    public FibonacciSetting getSetting() {
+        return setting;
+    }
+    
+    public FibonacciRpcWorker() throws OpflowBootstrapException {
+        this(null);
+    }
+    
+    public FibonacciRpcWorker(FibonacciSetting setting) throws OpflowBootstrapException {
+        this.setting = (setting != null) ? setting : new FibonacciSetting();
+        this.worker = OpflowHelper.createRpcWorker();
     }
     
     public OpflowEngine.ConsumerInfo process() {
@@ -47,7 +57,9 @@ public class FibonacciRpcWorker {
                     
                     int number = ((Double) jsonMap.get("number")).intValue();
                     if (number < 0) throw new OpflowOperationException("number should be positive");
-                    if (number > 40) throw new OpflowOperationException("number exceeding limit (40)");
+                    if (number > setting.getNumberMax()) {
+                        throw new OpflowOperationException("number exceeding limit (" + setting.getNumberMax() + ")");
+                    }
                     
                     FibonacciGenerator fibonacci = new FibonacciGenerator(number, 1, 9);
                     

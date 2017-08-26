@@ -22,8 +22,8 @@ public class FibonacciGenerator {
     }
     
     public FibonacciGenerator(int number, int min, int max) {
-        if (number < 0) throw new IllegalArgumentException("number is negative");
-        if (number > 50) throw new IllegalArgumentException("exceeding limit number");
+        if (number < 0) throw new IllegalArgumentException("FibonacciGenerator - number is negative");
+        if (number > 50) throw new IllegalArgumentException("FibonacciGenerator - exceeding limit number");
         this.n = number;
         this.m = min;
         this.M = max;

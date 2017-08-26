@@ -2,7 +2,7 @@ package com.devebot.opflow.example.bdd.steps;
 
 import com.devebot.opflow.OpflowEngine.ConsumerInfo;
 import com.devebot.opflow.example.FibonacciRpcWorker;
-import com.devebot.opflow.exception.OpflowConstructorException;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import java.util.HashMap;
 import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,7 +22,7 @@ public class FibonacciRpcWorkerSteps {
     private final Map<String, String> consumerTags = new HashMap<String, String>();
     
     @Given("a Fibonacci RpcWorker($workerName)")
-    public void givenFibonacciWorkers(final String workerName) throws OpflowConstructorException {
+    public void givenFibonacciWorkers(final String workerName) throws OpflowBootstrapException {
         FibonacciRpcWorker worker = new FibonacciRpcWorker();
         workers.put(workerName, worker);
         ConsumerInfo info = worker.process();
