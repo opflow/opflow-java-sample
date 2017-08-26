@@ -2,10 +2,11 @@ package com.devebot.opflow.example;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.devebot.opflow.OpflowRpcRequest;
 import com.devebot.opflow.OpflowRpcResult;
 import com.devebot.opflow.OpflowUtil;
+import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
+import com.devebot.opflow.exception.OpflowOperationException;
 
 /**
  *
@@ -13,7 +14,7 @@ import com.devebot.opflow.exception.OpflowConnectionException;
  */
 public class CommandLine {
     
-    public static void main(String ... argv) throws Exception {
+    public static void main(String ... argv) {
         CommandLine main = new CommandLine();
         JCommander.newBuilder().addObject(main).build().parse(argv);
         main.dispatch();
@@ -34,42 +35,65 @@ public class CommandLine {
     @Parameter(names={"--json", "-j"})
     String json;
 
-    public void dispatch() throws Exception {
+    public void dispatch() {
+        FibonacciRpcMaster master = null;
+        FibonacciRpcWorker worker = null;
+        FibonacciPubsubHandler sender = null;
+        FibonacciPubsubHandler pubsub = null;
         try {
             if ("server".equals(mode)) {
                 final FibonacciSetting setting = new FibonacciSetting();
 
                 System.out.println("[+] start Fibonacci RPC Worker ...");
-                final FibonacciRpcWorker worker = new FibonacciRpcWorker(setting);
+                worker = new FibonacciRpcWorker(setting);
                 worker.process();
 
                 System.out.println("[-] start Fibonacci Setting Subscriber ...");
-                final FibonacciPubsubHandler pubsub = new FibonacciPubsubHandler(setting);
+                pubsub = new FibonacciPubsubHandler(setting);
                 pubsub.subscribe();
 
                 System.out.println("[*] Waiting for message. To exit press CTRL+C");
             } else {
                 if("request".equals(action)) {
                     System.out.println("[+] request Fibonacci(" + number + ")");
-                    FibonacciRpcMaster master = new FibonacciRpcMaster();
-                    OpflowRpcRequest session = master.request(number);
-                    printResult(OpflowUtil.exhaustRequest(session));
+                    master = new FibonacciRpcMaster();
+                    printResult(OpflowUtil.exhaustRequest(master.request(number)));
                     master.close();
                 } else {
-                    FibonacciPubsubHandler sender = new FibonacciPubsubHandler();
+                    sender = new FibonacciPubsubHandler();
                     sender.publish(numberMax);
                     sender.close();
                     System.out.println("[-] numberMax has been sent");
                 }
             }
-        } catch (OpflowConnectionException exception) {
-            String[] msgs = new String[] {
-                "[-] Connect to RabbitMQ has been failed. Try again with log4j TRACE mode.",
-                "[-] Verify the Connection Parameter/{URI, host,...} on console or logfile.",
-                "[-] Exception message: " + exception.getMessage()
-            };
-            for(String msg: msgs) {
-                System.out.println(msg);
+        } catch (Exception exception) {
+            System.out.println("[+] Error:");
+            if (exception instanceof OpflowConnectionException) {
+                printErrors(new String[] {
+                    "[-] Connect to RabbitMQ has been failed. Try again with log4j TRACE mode.",
+                    "[-] Verify the Connection Parameter/{URI, host,...} on console or logfile.",
+                });
+            } else if (exception instanceof OpflowBootstrapException) {
+                printErrors(new String[] {
+                    "[-] Initialize broker has been failed.",
+                });
+            } else if (exception instanceof OpflowOperationException) {
+                printErrors(new String[] {
+                    "[-] Invoke produce()/consume() has been failed.",
+                });
+            }
+            printErrors(new String[] {
+                "[+] Exception details:",
+                "[-] class: " + exception.getClass().getName(),
+                "[-] message: " + exception.getMessage()
+            });
+            // close all of connections
+            if ("server".equals(mode)) {
+                if (worker != null) worker.close();
+                if (pubsub != null) pubsub.close();
+            } else {
+                if (master != null) master.close();
+                if (sender != null) sender.close();
             }
         }
     }
@@ -89,5 +113,11 @@ public class CommandLine {
             System.out.println("[-] Fibonacci(" + number + ") -> " + result.getValueAsString());
         }
         System.out.println();
+    }
+    
+    private void printErrors(String[] msgs) {
+        for(String msg: msgs) {
+            System.out.println(msg);
+        }
     }
 }
