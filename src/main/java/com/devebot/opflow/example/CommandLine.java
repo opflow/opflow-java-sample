@@ -8,7 +8,9 @@ import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.exception.OpflowOperationException;
+import com.google.common.base.Stopwatch;
 import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -62,6 +64,7 @@ public class CommandLine {
 
                 System.out.println("[*] Waiting for message. To exit press CTRL+C");
             } else {
+                Stopwatch stopwatch = Stopwatch.createStarted();
                 if("request".equals(action)) {
                     System.out.println("[+] request Fibonacci(" + number + ")");
                     master = new FibonacciRpcMaster();
@@ -99,6 +102,9 @@ public class CommandLine {
                     sender.close();
                     System.out.println("[-] numberMax has been sent");
                 }
+                stopwatch.stop();
+                System.out.println("[*] Time elapsed for " + action + " is " + 
+                        stopwatch.elapsed(TimeUnit.MILLISECONDS) + " (ms)");
             }
         } catch (Exception exception) {
             System.out.println("[+] Error:");
