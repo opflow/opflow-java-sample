@@ -8,7 +8,9 @@ import com.devebot.opflow.OpflowRpcResult;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FibonacciRpcMaster {
 
@@ -19,7 +21,7 @@ public class FibonacciRpcMaster {
     }
     
     public OpflowRpcRequest request(final int number) {
-        return request(number, 60000);
+        return request(number, 0);
     }
     
     public OpflowRpcRequest request(final int number, final long timeout) {
@@ -31,9 +33,23 @@ public class FibonacciRpcMaster {
         }), OpflowUtil.buildOptions(new OpflowUtil.MapListener() {
             @Override
             public void transform(Map<String, Object> opts) {
-                opts.put("timeout", timeout);
+                if (timeout > 0) opts.put("timeout", timeout);
             }
         }));
+    }
+    
+    public Queue<FibonacciData.Pair> random(final int total, final int left, final int right) {
+        final Queue<FibonacciData.Pair> sessions = new ConcurrentLinkedQueue<FibonacciData.Pair>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0; i<total; i++) {
+                    int number = random(left, right);
+                    sessions.add(new FibonacciData.Pair(number, request(number)));
+                }
+            }
+        }).start();
+        return sessions;
     }
     
     public String checkState() {

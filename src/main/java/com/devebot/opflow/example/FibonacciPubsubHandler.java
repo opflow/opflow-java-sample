@@ -24,7 +24,7 @@ public class FibonacciPubsubHandler {
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciPubsubHandler.class);
     private final JsonParser jsonParser = new JsonParser();
     private final OpflowPubsubHandler handler;
-    private final FibonacciSetting setting;
+    private final FibonacciData.Setting setting;
     private final OpflowPubsubListener listener = new OpflowPubsubListener() {
         @Override
         public void processMessage(OpflowMessage message) throws IOException {
@@ -50,7 +50,7 @@ public class FibonacciPubsubHandler {
         this(null, null);
     }
     
-    public FibonacciPubsubHandler(FibonacciSetting setting) throws OpflowBootstrapException {
+    public FibonacciPubsubHandler(FibonacciData.Setting setting) throws OpflowBootstrapException {
         this(setting, null);
     }
     
@@ -58,11 +58,11 @@ public class FibonacciPubsubHandler {
         this(null, propFile);
     }
     
-    public FibonacciPubsubHandler(FibonacciSetting setting, String propFile) throws OpflowBootstrapException {
+    public FibonacciPubsubHandler(FibonacciData.Setting setting, String propFile) throws OpflowBootstrapException {
         Properties props = new Properties();
         props.setProperty("subscriberLimit", "1");
         this.handler = OpflowHelper.createPubsubHandler(propFile, props, true);
-        this.setting = (setting != null) ? setting : new FibonacciSetting();
+        this.setting = (setting != null) ? setting : new FibonacciData.Setting();
     }
     
     public void publish(int numberMax) {
