@@ -21,7 +21,7 @@ public class FibonacciRpcMaster {
     }
     
     public OpflowRpcRequest request(final int number) {
-        return request(number, 0);
+        return request(number, 180000);
     }
     
     public OpflowRpcRequest request(final int number, final long timeout) {
@@ -45,7 +45,7 @@ public class FibonacciRpcMaster {
             public void run() {
                 for(int i=0; i<total; i++) {
                     int number = random(left, right);
-                    sessions.add(new FibonacciData.Pair(number, request(number)));
+                    sessions.add(new FibonacciData.Pair(i, number, request(number)));
                 }
             }
         }).start();

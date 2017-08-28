@@ -47,7 +47,9 @@ public class FibonacciRpcWorker {
                     LOG.debug("[+] Fibonacci received: '" + msg + "'");
                     
                     // OPTIONAL
-                    response.emitStarted();
+                    if (setting.isProgressEnabled()) {
+                        response.emitStarted();
+                    }
                     
                     Map<String, Object> jsonMap = OpflowUtil.jsonStringToMap(msg);
                     
@@ -60,9 +62,13 @@ public class FibonacciRpcWorker {
                     FibonacciGenerator fibonacci = new FibonacciGenerator(number, 1, 9);
                     
                     // OPTIONAL
-                    while(fibonacci.next()) {
-                        FibonacciGenerator.Result r = fibonacci.result();
-                        response.emitProgress(r.getStep(), r.getNumber());
+                    if (setting.isProgressEnabled()) {
+                        while(fibonacci.next()) {
+                            FibonacciGenerator.Result r = fibonacci.result();
+                            response.emitProgress(r.getStep(), r.getNumber());
+                        }
+                    } else {
+                        fibonacci.finish();
                     }
 
                     String result = OpflowUtil.jsonObjToString(fibonacci.result());

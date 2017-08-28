@@ -24,27 +24,30 @@ public class CommandLine {
         main.dispatch();
     }
     
-    @Parameter(names={"--program", "-p"}, description = "Program mode (client/server)")
+    @Parameter(names={"--process", "-p"}, description = "Program mode (client/server)")
     String mode;
     
-    @Parameter(names={"--action", "-a"}, description = "Client action: request/random/publish")
+    @Parameter(names={"--routine", "-r"}, description = "Client action: request/random/publish")
     String action;
     
     @Parameter(names={"--number", "-n"})
     int number = 0;
     
-    @Parameter(names={"--number-max", "-m"})
-    int numberMax = 40;
-    
     @Parameter(names={"--total", "-t"})
     int total = 0;
     
-    @Parameter(names={"--range", "-r"})
+    @Parameter(names={"--range", "-b"})
     String range = null;
     
     @Parameter(names={"--json", "-j"})
     String json;
 
+    @Parameter(names={"--number-max"})
+    int numberMax = 40;
+    
+    @Parameter(names={"--progress-enabled"})
+    boolean progressEnabled = true;
+    
     public void dispatch() {
         FibonacciRpcMaster master = null;
         FibonacciRpcWorker worker = null;
@@ -68,7 +71,7 @@ public class CommandLine {
                 if("request".equals(action)) {
                     System.out.println("[+] request Fibonacci(" + number + ")");
                     master = new FibonacciRpcMaster();
-                    printResult(number, OpflowUtil.exhaustRequest(master.request(number)));
+                    printResult(0, number, OpflowUtil.exhaustRequest(master.request(number)));
                     master.close();
                 } else if ("random".equals(action)) {
                     if (total <= 0) total = 10;
@@ -80,6 +83,7 @@ public class CommandLine {
                         if (50 < rangeInt[1] || rangeInt[1] <= rangeInt[0]) rangeInt[1] = 50;
                     }
                     
+                    int countCompleted = 0;
                     System.out.println("[+] calculate Fibonacci() of " + total + " random number in range [" +
                             rangeInt[0] + ", " + rangeInt[1] + "].");
                     OpflowTask.Countdown countdown = new OpflowTask.Countdown(total);
@@ -90,11 +94,13 @@ public class CommandLine {
                     } catch (InterruptedException ie) {}
                     while(!queue.isEmpty()) {
                         FibonacciData.Pair req = queue.poll();
-                        printResult(req.getNumber(), OpflowUtil.exhaustRequest(req.getSession()));
+                        OpflowRpcResult result = OpflowUtil.exhaustRequest(req.getSession());
+                        printResult(req.getIndex(), req.getNumber(), result);
+                        if (result.isCompleted()) countCompleted += 1;
                         countdown.check();
                     }
                     countdown.bingo();
-                    System.out.println("[-] random command has been finished");
+                    System.out.println("[-] random command has been finished: " + countCompleted);
                     master.close();
                 } else {
                     sender = new FibonacciPubsubHandler();
@@ -138,19 +144,19 @@ public class CommandLine {
         }
     }
     
-    private void printResult(int number, OpflowRpcResult result) {
-        System.out.println("[-] ConsumerID: " + result.getWorkerTag());
+    private void printResult(int index, int number, OpflowRpcResult result) {
+        System.out.println("[-] #" + index + " ConsumerID: " + result.getWorkerTag());
         for(OpflowRpcResult.Step step: result.getProgress()) {
-            System.out.println("[-] Fibonacci(" + number + ") percent: " + step.getPercent());
+            System.out.println("[-] #" + index + " Fibonacci(" + number + ") percent: " + step.getPercent());
         }
         if (result.isTimeout()) {
-            System.out.println("[-] Fibonacci(" + number + ") is timeout.");
+            System.out.println("[-] #" + index + " Fibonacci(" + number + ") is timeout.");
         }
         if (result.isFailed()) {
-            System.out.println("[-] Fibonacci(" + number + ") is failed: " + result.getErrorAsString());
+            System.out.println("[-] #" + index + " Fibonacci(" + number + ") is failed: " + result.getErrorAsString());
         }
         if (result.isCompleted()) {
-            System.out.println("[-] Fibonacci(" + number + ") -> " + result.getValueAsString());
+            System.out.println("[-] #" + index + " Fibonacci(" + number + ") -> " + result.getValueAsString());
         }
         System.out.println();
     }

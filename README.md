@@ -89,3 +89,38 @@ Invokes maven to run integration tests:
 ```shell
 mvn verify
 ```
+
+## Packing
+
+Packing and assembling program and dependencies into `jar` package:
+
+```shell
+mvn clean package -Pbundle
+```
+
+Copies and customizes `log4j.properties` and `opflow.properties` files:
+
+```shell
+cp src/main/resources/*.properties ~/
+```
+
+Opens and edit properties files if necessary to change.
+
+Execute server:
+
+```shell
+bash fibonacci --process server
+```
+
+Make a request Fibonacci(38):
+
+
+```shell
+bash fibonacci -p client -r request -n 38
+```
+
+Calculate Fibonacci for 1000 random numbers in a range [20, 40]:
+
+```shell
+bash fibonacci -p client -r random --total 1000 --range 20,40
+```
