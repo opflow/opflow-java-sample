@@ -19,14 +19,14 @@ public class FibonacciRpcWorker {
 
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciRpcWorker.class);
     private final OpflowRpcWorker worker;
-    private final FibonacciData.Setting setting;
+    private final FibonacciSetting setting;
     
     public FibonacciRpcWorker() throws OpflowBootstrapException {
         this(null);
     }
     
-    public FibonacciRpcWorker(FibonacciData.Setting setting) throws OpflowBootstrapException {
-        this.setting = (setting != null) ? setting : new FibonacciData.Setting();
+    public FibonacciRpcWorker(FibonacciSetting setting) throws OpflowBootstrapException {
+        this.setting = (setting != null) ? setting : new FibonacciSetting();
         this.worker = OpflowHelper.createRpcWorker();
     }
     
@@ -101,7 +101,7 @@ public class FibonacciRpcWorker {
         return worker.check().getConnectionState() == 1 ? "opened" : "closed";
     }
     
-    public FibonacciData.Setting getSetting() {
+    public FibonacciSetting getSetting() {
         return setting;
     }
     

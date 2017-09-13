@@ -55,7 +55,7 @@ public class CommandLine {
         FibonacciPubsubHandler pubsub = null;
         try {
             if ("server".equals(mode)) {
-                final FibonacciData.Setting setting = new FibonacciData.Setting();
+                final FibonacciSetting setting = new FibonacciSetting();
 
                 System.out.println("[+] start Fibonacci RPC Worker ...");
                 worker = new FibonacciRpcWorker(setting);
