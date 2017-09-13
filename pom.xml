@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample</artifactId>
-    <version>0.1.11</version>
+    <version>0.1.12</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-core</artifactId>
-            <version>0.1.11</version>
+            <version>0.1.12</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -95,23 +95,23 @@
                     <skipTests>false</skipTests>
                 </configuration>
             </plugin>
-            <plugin>  
-                <groupId>org.apache.maven.plugins</groupId>  
-                <artifactId>maven-failsafe-plugin</artifactId>  
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
-                    <execution>  
-                        <id>integration-test</id>  
-                        <goals>  
-                            <goal>integration-test</goal>  
-                            <goal>verify</goal>  
-                        </goals>  
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
                     </execution>
-                </executions>  
-                <configuration>  
-                    <includes>  
-                        <include>**/*Stories.java</include>  
-                    </includes>  
-                </configuration>  
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*Stories.java</include>
+                    </includes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jbehave</groupId>

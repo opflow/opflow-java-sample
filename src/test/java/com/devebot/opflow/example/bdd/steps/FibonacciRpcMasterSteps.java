@@ -52,7 +52,9 @@ public class FibonacciRpcMasterSteps {
         
         int step = Integer.parseInt(jsonObject.get("step").toString());
         assertThat(step, equalTo(fibResult.getStep()));
-        assertThat(step, equalTo(output.getProgress().length));
+        if (output.getProgress().length > 0) {
+            assertThat(step, equalTo(output.getProgress().length));
+        }
         
         long value = Long.parseLong(jsonObject.get("value").toString());
         assertThat(value, equalTo(fibResult.getValue()));

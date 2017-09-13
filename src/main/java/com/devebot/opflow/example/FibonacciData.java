@@ -34,7 +34,7 @@ public class FibonacciData {
     
     public static class Setting {
         private int numberMax = 40;
-        private boolean progressEnabled = false;
+        private boolean progressEnabled = true;
         
         public int getNumberMax() {
             return numberMax;
