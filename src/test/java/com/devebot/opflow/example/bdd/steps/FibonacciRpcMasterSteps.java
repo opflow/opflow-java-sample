@@ -2,7 +2,6 @@ package com.devebot.opflow.example.bdd.steps;
 
 import com.devebot.opflow.OpflowRpcRequest;
 import com.devebot.opflow.OpflowRpcResult;
-import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.example.FibonacciGenerator;
 import com.devebot.opflow.example.FibonacciRpcMaster;
 import com.devebot.opflow.exception.OpflowBootstrapException;
@@ -41,7 +40,7 @@ public class FibonacciRpcMasterSteps {
 
     @Then("the request $requestName should finished successfully")
     public void checkRequestOutput(@Named("requestName") final String requestName) {
-        OpflowRpcResult output = OpflowUtil.exhaustRequest(requests.get(requestName));
+        OpflowRpcResult output = requests.get(requestName).extractResult();
         JsonObject jsonObject = (JsonObject)jsonParser.parse(output.getValueAsString());
         
         int number = Integer.parseInt(jsonObject.get("number").toString());

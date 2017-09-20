@@ -71,7 +71,7 @@ public class CommandLine {
                 if("request".equals(action)) {
                     System.out.println("[+] request Fibonacci(" + number + ")");
                     master = new FibonacciRpcMaster();
-                    printResult(0, number, OpflowUtil.exhaustRequest(master.request(number)));
+                    printResult(0, number, master.request(number).extractResult());
                     master.close();
                 } else if ("random".equals(action)) {
                     if (total <= 0) total = 10;
@@ -94,7 +94,7 @@ public class CommandLine {
                     } catch (InterruptedException ie) {}
                     while(!queue.isEmpty()) {
                         FibonacciData.Pair req = queue.poll();
-                        OpflowRpcResult result = OpflowUtil.exhaustRequest(req.getSession());
+                        OpflowRpcResult result = req.getSession().extractResult();
                         printResult(req.getIndex(), req.getNumber(), result);
                         if (result.isCompleted()) countCompleted += 1;
                         countdown.check();

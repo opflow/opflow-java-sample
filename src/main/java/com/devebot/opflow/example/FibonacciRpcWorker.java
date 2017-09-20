@@ -1,7 +1,7 @@
 package com.devebot.opflow.example;
 
 import com.devebot.opflow.OpflowEngine;
-import com.devebot.opflow.OpflowHelper;
+import com.devebot.opflow.OpflowLoader;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowRpcListener;
 import com.devebot.opflow.OpflowRpcResponse;
@@ -27,14 +27,14 @@ public class FibonacciRpcWorker {
     
     public FibonacciRpcWorker(FibonacciSetting setting) throws OpflowBootstrapException {
         this.setting = (setting != null) ? setting : new FibonacciSetting();
-        this.worker = OpflowHelper.createRpcWorker();
+        this.worker = OpflowLoader.createRpcWorker();
     }
     
     public OpflowEngine.ConsumerInfo process() {
         OpflowEngine.ConsumerInfo info = worker.process(new OpflowRpcListener() {
             @Override
             public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
-                LOG.debug("[+] Routine input: " + message.getContentAsString());
+                LOG.debug("[+] Routine input: " + message.getBodyAsString());
                 return OpflowRpcListener.NEXT;
             }
         });
@@ -43,7 +43,7 @@ public class FibonacciRpcWorker {
             @Override
             public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
                 try {
-                    String msg = message.getContentAsString();
+                    String msg = message.getBodyAsString();
                     LOG.debug("[+] Fibonacci received: '" + msg + "'");
                     
                     // OPTIONAL
@@ -71,19 +71,16 @@ public class FibonacciRpcWorker {
                         fibonacci.finish();
                     }
 
-                    String result = OpflowUtil.jsonObjToString(fibonacci.result());
+                    String result = OpflowUtil.jsonObjectToString(fibonacci.result());
                     LOG.debug("[-] Fibonacci finished with: '" + result + "'");
 
                     // MANDATORY
                     response.emitCompleted(result);
                 } catch (final Exception ex) {
-                    String errmsg = OpflowUtil.buildJson(new MapListener() {
-                        @Override
-                        public void transform(Map<String, Object> opts) {
-                            opts.put("exceptionClass", ex.getClass().getName());
-                            opts.put("exceptionMessage", ex.getMessage());
-                        }
-                    });
+                    String errmsg = OpflowUtil.buildMap()
+                            .put("exceptionClass", ex.getClass().getName())
+                            .put("exceptionMessage", ex.getMessage())
+                            .toString();
                     LOG.error("[-] Error message: " + errmsg);
                     
                     // MANDATORY

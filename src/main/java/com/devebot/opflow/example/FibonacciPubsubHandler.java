@@ -1,7 +1,7 @@
 package com.devebot.opflow.example;
 
 import com.devebot.opflow.OpflowEngine;
-import com.devebot.opflow.OpflowHelper;
+import com.devebot.opflow.OpflowLoader;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowPubsubHandler;
 import com.devebot.opflow.OpflowPubsubListener;
@@ -28,7 +28,7 @@ public class FibonacciPubsubHandler {
     private final OpflowPubsubListener listener = new OpflowPubsubListener() {
         @Override
         public void processMessage(OpflowMessage message) throws IOException {
-            String content = new String(message.getContent(), "UTF-8");
+            String content = new String(message.getBody(), "UTF-8");
             System.out.println(" [-] Received setting: '" + content + "'");
             JsonObject jsonObject = (JsonObject)jsonParser.parse(content);
             int numberMax = Integer.parseInt(jsonObject.get("numberMax").toString());
@@ -61,7 +61,7 @@ public class FibonacciPubsubHandler {
     public FibonacciPubsubHandler(FibonacciSetting setting, String propFile) throws OpflowBootstrapException {
         Properties props = new Properties();
         props.setProperty("subscriberLimit", "1");
-        this.handler = OpflowHelper.createPubsubHandler(propFile, props, true);
+        this.handler = OpflowLoader.createPubsubHandler(propFile, props, true);
         this.setting = (setting != null) ? setting : new FibonacciSetting();
     }
     

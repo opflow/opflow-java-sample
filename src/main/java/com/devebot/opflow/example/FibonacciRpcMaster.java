@@ -1,6 +1,6 @@
 package com.devebot.opflow.example;
 
-import com.devebot.opflow.OpflowHelper;
+import com.devebot.opflow.OpflowLoader;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowRpcMaster;
 import com.devebot.opflow.OpflowRpcRequest;
@@ -17,7 +17,7 @@ public class FibonacciRpcMaster {
     private final OpflowRpcMaster master;
     
     public FibonacciRpcMaster() throws OpflowBootstrapException {
-        master = OpflowHelper.createRpcMaster();
+        master = OpflowLoader.createRpcMaster();
     }
     
     public OpflowRpcRequest request(final int number) {
@@ -25,17 +25,15 @@ public class FibonacciRpcMaster {
     }
     
     public OpflowRpcRequest request(final int number, final long timeout) {
-        return master.request("fibonacci", OpflowUtil.buildJson(new OpflowUtil.MapListener() {
-            @Override
-            public void transform(Map<String, Object> opts) {
-                opts.put("number", number);
-            }
-        }), OpflowUtil.buildOptions(new OpflowUtil.MapListener() {
-            @Override
-            public void transform(Map<String, Object> opts) {
-                if (timeout > 0) opts.put("timeout", timeout);
-            }
-        }));
+        return master.request("fibonacci",
+                OpflowUtil.buildMap()
+                        .put("number", number).toString(),
+                OpflowUtil.buildMap(new OpflowUtil.MapListener() {
+                    @Override
+                    public void transform(Map<String, Object> opts) {
+                        if (timeout > 0) opts.put("timeout", timeout);
+                    }
+                }).toMap());
     }
     
     public Queue<FibonacciData.Pair> random(final int total, final int left, final int right) {
@@ -77,16 +75,16 @@ public class FibonacciRpcMaster {
         while(req1.hasNext()) {
             OpflowMessage msg = req1.next();
             if (msg.getInfo().get("workerTag") == null) {
-                System.out.println("[-] message1 received: " + msg.getContentAsString());
+                System.out.println("[-] message1 received: " + msg.getBodyAsString());
             } else {
-                System.out.println("[-] message1 received: " + msg.getContentAsString() + 
+                System.out.println("[-] message1 received: " + msg.getBodyAsString() + 
                     " / workerTag: " + msg.getInfo().get("workerTag"));
             }
         }
         System.out.println();
         
         // Transforms OpflowRpcRequest object to OpflowRpcResult object
-        OpflowRpcResult result2 = OpflowUtil.exhaustRequest(req2);
+        OpflowRpcResult result2 = req2.extractResult();
         System.out.println("[-] message2 worker: " + result2.getWorkerTag());
         for(OpflowRpcResult.Step step: result2.getProgress()) {
             System.out.println("[-] message2 percent: " + step.getPercent());
@@ -95,7 +93,7 @@ public class FibonacciRpcMaster {
         System.out.println();
         
         for(int i = 0; i<reqs.length; i++) {
-            OpflowRpcResult rsts = OpflowUtil.exhaustRequest(reqs[i]);
+            OpflowRpcResult rsts = reqs[i].extractResult();
             System.out.println("[-] reqs[" + i + "] result: " + rsts.getValueAsString() +
                     " from worker: " + rsts.getWorkerTag());
         }
@@ -106,9 +104,9 @@ public class FibonacciRpcMaster {
         while(reqx.hasNext()) {
             OpflowMessage msg = reqx.next();
             if (msg.getInfo().get("workerTag") == null) {
-                System.out.println("[-] messagex received: " + msg.getContentAsString());
+                System.out.println("[-] messagex received: " + msg.getBodyAsString());
             } else {
-                System.out.println("[-] messagex received: " + msg.getContentAsString() + 
+                System.out.println("[-] messagex received: " + msg.getBodyAsString() + 
                     " / workerTag: " + msg.getInfo().get("workerTag"));
             }
         }
