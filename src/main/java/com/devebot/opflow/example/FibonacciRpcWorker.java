@@ -7,7 +7,6 @@ import com.devebot.opflow.OpflowRpcListener;
 import com.devebot.opflow.OpflowRpcResponse;
 import com.devebot.opflow.OpflowRpcWorker;
 import com.devebot.opflow.OpflowUtil;
-import com.devebot.opflow.OpflowUtil.MapListener;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowOperationException;
 import java.io.IOException;

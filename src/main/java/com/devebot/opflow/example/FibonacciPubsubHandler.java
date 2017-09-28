@@ -60,8 +60,8 @@ public class FibonacciPubsubHandler {
     
     public FibonacciPubsubHandler(FibonacciSetting setting, String propFile) throws OpflowBootstrapException {
         Properties props = new Properties();
-        props.setProperty("subscriberLimit", "1");
-        this.handler = OpflowLoader.createPubsubHandler(propFile, props, true);
+//        props.setProperty("opflow.pubsub.subscriberLimit", "1");
+        this.handler = OpflowLoader.createPubsubHandler(OpflowLoader.mergeConfiguration(null, props), propFile, true);
         this.setting = (setting != null) ? setting : new FibonacciSetting();
     }
     

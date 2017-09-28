@@ -26,8 +26,7 @@ public class FibonacciRpcMaster {
     
     public OpflowRpcRequest request(final int number, final long timeout) {
         return master.request("fibonacci",
-                OpflowUtil.buildMap()
-                        .put("number", number).toString(),
+                OpflowUtil.buildMap().put("number", number).toString(),
                 OpflowUtil.buildMap(new OpflowUtil.MapListener() {
                     @Override
                     public void transform(Map<String, Object> opts) {
