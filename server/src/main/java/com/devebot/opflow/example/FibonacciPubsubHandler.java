@@ -1,7 +1,7 @@
 package com.devebot.opflow.example;
 
 import com.devebot.opflow.OpflowEngine;
-import com.devebot.opflow.OpflowLoader;
+import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowPubsubHandler;
 import com.devebot.opflow.OpflowPubsubListener;
@@ -61,7 +61,7 @@ public class FibonacciPubsubHandler {
     public FibonacciPubsubHandler(FibonacciSetting setting, String propFile) throws OpflowBootstrapException {
         Properties props = new Properties();
 //        props.setProperty("opflow.pubsub.subscriberLimit", "1");
-        this.handler = OpflowLoader.createPubsubHandler(OpflowLoader.mergeConfiguration(null, props), propFile, true);
+        this.handler = OpflowBuilder.createPubsubHandler(OpflowBuilder.mergeConfiguration(null, props), propFile, true);
         this.setting = (setting != null) ? setting : new FibonacciSetting();
     }
     

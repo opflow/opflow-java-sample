@@ -1,6 +1,6 @@
 package com.devebot.opflow.example;
 
-import com.devebot.opflow.OpflowLoader;
+import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowRpcMaster;
 import com.devebot.opflow.OpflowRpcRequest;
@@ -17,7 +17,7 @@ public class FibonacciRpcMaster {
     private final OpflowRpcMaster master;
     
     public FibonacciRpcMaster() throws OpflowBootstrapException {
-        master = OpflowLoader.createRpcMaster();
+        master = OpflowBuilder.createRpcMaster();
     }
     
     public OpflowRpcRequest request(final int number) {

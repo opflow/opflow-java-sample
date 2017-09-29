@@ -4,7 +4,7 @@ package com.devebot.opflow.sample.exceptions;
  *
  * @author drupalex
  */
-public class FibonacciException extends Exception {
+public class FibonacciException extends RuntimeException {
 
     public FibonacciException() {
     }

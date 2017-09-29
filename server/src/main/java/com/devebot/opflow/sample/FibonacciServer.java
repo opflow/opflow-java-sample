@@ -1,6 +1,6 @@
 package com.devebot.opflow.sample;
 
-import com.devebot.opflow.OpflowLoader;
+import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowServerlet;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
 
@@ -11,7 +11,7 @@ import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
 public class FibonacciServer {
     public static void main(String[] argv) throws Exception {
         System.out.println("FibonacciServer start: ");
-        final OpflowServerlet server = OpflowLoader.createServerlet(OpflowServerlet.ListenerMap.EMPTY, "server.properties");
+        final OpflowServerlet server = OpflowBuilder.createServerlet("server.properties");
         server.instantiateType(FibonacciCalculatorImpl.class);
         server.start();
         System.out.println("[*] Waiting for message. To exit press CTRL+C");

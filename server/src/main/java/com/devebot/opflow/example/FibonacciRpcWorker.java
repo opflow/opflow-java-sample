@@ -1,7 +1,8 @@
 package com.devebot.opflow.example;
 
 import com.devebot.opflow.OpflowEngine;
-import com.devebot.opflow.OpflowLoader;
+import com.devebot.opflow.OpflowBuilder;
+import com.devebot.opflow.OpflowJsontool;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowRpcListener;
 import com.devebot.opflow.OpflowRpcResponse;
@@ -26,7 +27,7 @@ public class FibonacciRpcWorker {
     
     public FibonacciRpcWorker(FibonacciSetting setting) throws OpflowBootstrapException {
         this.setting = (setting != null) ? setting : new FibonacciSetting();
-        this.worker = OpflowLoader.createRpcWorker();
+        this.worker = OpflowBuilder.createRpcWorker();
     }
     
     public OpflowEngine.ConsumerInfo process() {
@@ -50,7 +51,7 @@ public class FibonacciRpcWorker {
                         response.emitStarted();
                     }
                     
-                    Map<String, Object> jsonMap = OpflowUtil.jsonStringToMap(msg);
+                    Map<String, Object> jsonMap = OpflowJsontool.toObjectMap(msg);
                     
                     int number = ((Double) jsonMap.get("number")).intValue();
                     if (number < 0) throw new OpflowOperationException("number should be positive");
@@ -70,7 +71,7 @@ public class FibonacciRpcWorker {
                         fibonacci.finish();
                     }
 
-                    String result = OpflowUtil.jsonObjectToString(fibonacci.result());
+                    String result = OpflowJsontool.toString(fibonacci.result());
                     LOG.debug("[-] Fibonacci finished with: '" + result + "'");
 
                     // MANDATORY

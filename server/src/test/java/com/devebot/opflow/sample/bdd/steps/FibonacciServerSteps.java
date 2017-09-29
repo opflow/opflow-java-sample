@@ -1,6 +1,6 @@
 package com.devebot.opflow.sample.bdd.steps;
 
-import com.devebot.opflow.OpflowLoader;
+import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowServerlet;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
@@ -28,14 +28,14 @@ public class FibonacciServerSteps {
     
     @Given("a Serverlet named '$serverletName' with default properties file")
     public void createServerlet(@Named("serverletName") final String serverletName) throws OpflowBootstrapException {
-        serverlets.put(serverletName, OpflowLoader.createServerlet(OpflowServerlet.getListenerBuilder().build()));
+        serverlets.put(serverletName, OpflowBuilder.createServerlet(OpflowServerlet.getDescriptorBuilder().build()));
         if (LOG.isDebugEnabled()) LOG.debug("Serverlet[" + serverletName + "] has been created");
     }
     
     @Given("a Serverlet named '$serverletName' with properties file: '$propFile'")
     public void createServerlet(@Named("serverletName") final String serverletName, 
             @Named("propFile") final String propFile) throws OpflowBootstrapException {
-        serverlets.put(serverletName, OpflowLoader.createServerlet(OpflowServerlet.getListenerBuilder().build(), propFile));
+        serverlets.put(serverletName, OpflowBuilder.createServerlet(OpflowServerlet.getDescriptorBuilder().build(), propFile));
         if (LOG.isDebugEnabled()) LOG.debug("Serverlet[" + serverletName + "] has been created");
     }
     

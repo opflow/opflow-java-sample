@@ -1,6 +1,6 @@
 package com.devebot.opflow.example;
 
-import com.devebot.opflow.OpflowLoader;
+import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowPubsubHandler;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class FibonacciPublisher {
     }
     
     public FibonacciPublisher(String propFile) throws OpflowBootstrapException {
-        this.handler = OpflowLoader.createPubsubHandler(propFile);
+        this.handler = OpflowBuilder.createPubsubHandler(propFile);
     }
     
     public void publish(int numberMax) {
