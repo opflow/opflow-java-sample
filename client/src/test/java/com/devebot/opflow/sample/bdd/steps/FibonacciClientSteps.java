@@ -4,7 +4,7 @@ import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
-import com.devebot.opflow.sample.models.FibonacciPacket;
+import com.devebot.opflow.sample.models.FibonacciData;
 import com.devebot.opflow.sample.models.FibonacciResult;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,8 +51,8 @@ public class FibonacciClientSteps {
     public void callCommanderCalc(@Named("commanderName") final String commanderName,
             @Named("number") final int number) throws OpflowBootstrapException {
         FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
-        FibonacciResult result = calculator.calc(new FibonacciPacket(number));
-        System.out.println("XXXXXXXXXXXXXXXXXX: " + result.getValue());
+        FibonacciResult result = calculator.calc(new FibonacciData(number));
+        if (LOG.isDebugEnabled()) LOG.debug("Fibonacci: " + result.getValue());
     }
     
     @When("I close Commander named '$commanderName'")

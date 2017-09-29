@@ -2,7 +2,7 @@ package com.devebot.opflow.sample.services;
 
 import com.devebot.opflow.sample.business.FibonacciGenerator;
 import com.devebot.opflow.sample.models.FibonacciResult;
-import com.devebot.opflow.sample.models.FibonacciPacket;
+import com.devebot.opflow.sample.models.FibonacciData;
 
 /**
  *
@@ -16,7 +16,7 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
     }
 
     @Override
-    public FibonacciResult calc(FibonacciPacket data) {
+    public FibonacciResult calc(FibonacciData data) {
         return this.calc(data.getNumber());
     }
 }

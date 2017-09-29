@@ -1,7 +1,7 @@
 package com.devebot.opflow.sample.services;
 
+import com.devebot.opflow.sample.models.FibonacciData;
 import com.devebot.opflow.sample.models.FibonacciResult;
-import com.devebot.opflow.sample.models.FibonacciPacket;
 
 /**
  *
@@ -9,5 +9,5 @@ import com.devebot.opflow.sample.models.FibonacciPacket;
  */
 public interface FibonacciCalculator {
     FibonacciResult calc(int number);
-    FibonacciResult calc(FibonacciPacket data);
+    FibonacciResult calc(FibonacciData data);
 }
