@@ -4,11 +4,11 @@ package com.devebot.opflow.sample.models;
  *
  * @author drupalex
  */
-public class FibonacciData {
+public class FibonacciInput {
     
     private final int number;
 
-    public FibonacciData(int number) {
+    public FibonacciInput(int number) {
         this.number = number;
     }
 

@@ -1,6 +1,6 @@
 package com.devebot.opflow.sample.business;
 
-import com.devebot.opflow.sample.models.FibonacciResult;
+import com.devebot.opflow.sample.models.FibonacciOutput;
 import java.util.Random;
 
 /**
@@ -46,11 +46,11 @@ public class FibonacciGenerator {
         return true;
     }
     
-    public FibonacciResult result() {
-        return new FibonacciResult(f, c, n);
+    public FibonacciOutput result() {
+        return new FibonacciOutput(f, c, n);
     }
     
-    public FibonacciResult finish() {
+    public FibonacciOutput finish() {
         while(next()) {}
         return result();
     }

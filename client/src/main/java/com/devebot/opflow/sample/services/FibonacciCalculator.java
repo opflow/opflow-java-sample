@@ -1,13 +1,16 @@
 package com.devebot.opflow.sample.services;
 
-import com.devebot.opflow.sample.models.FibonacciData;
-import com.devebot.opflow.sample.models.FibonacciResult;
+import com.devebot.opflow.sample.models.FibonacciInput;
+import com.devebot.opflow.sample.models.FibonacciInputList;
+import com.devebot.opflow.sample.models.FibonacciOutput;
+import com.devebot.opflow.sample.models.FibonacciOutputList;
 
 /**
  *
  * @author drupalex
  */
 public interface FibonacciCalculator {
-    FibonacciResult calc(int number);
-    FibonacciResult calc(FibonacciData data);
+    FibonacciOutput calc(int number);
+    FibonacciOutput calc(FibonacciInput data);
+    FibonacciOutputList calc(FibonacciInputList list);
 }
