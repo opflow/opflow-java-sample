@@ -76,9 +76,9 @@ public class FibonacciClientSteps {
             @Named("numbers") final String numbers) throws OpflowBootstrapException {
         FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
         FibonacciInputList list = new FibonacciInputList();
-        String[] numberStrs = OpflowUtil.splitByComma(numbers);
-        for(String numberStr: numberStrs) {
-            list.add(new FibonacciInput(Integer.parseInt(numberStr)));
+        Integer[] integers = OpflowUtil.splitByComma(numbers, Integer.class);
+        for(Integer integer: integers) {
+            list.add(new FibonacciInput(integer));
         }
         FibonacciOutputList results = calculator.calc(list);
         if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutputList: " + OpflowJsontool.toString(results));
