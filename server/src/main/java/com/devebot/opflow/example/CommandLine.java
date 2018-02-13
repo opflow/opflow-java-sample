@@ -51,8 +51,8 @@ public class CommandLine {
     public void dispatch() {
         FibonacciRpcMaster master = null;
         FibonacciRpcWorker worker = null;
-        FibonacciPubsubHandler sender = null;
-        FibonacciPubsubHandler pubsub = null;
+        FibonacciPublisher sender = null;
+        FibonacciSubscriber pubsub = null;
         try {
             if ("server".equals(mode)) {
                 final FibonacciSetting setting = new FibonacciSetting();
@@ -62,7 +62,7 @@ public class CommandLine {
                 worker.process();
 
                 System.out.println("[-] start Fibonacci Setting Subscriber ...");
-                pubsub = new FibonacciPubsubHandler(setting);
+                pubsub = new FibonacciSubscriber(setting);
                 pubsub.subscribe();
 
                 System.out.println("[*] Waiting for message. To exit press CTRL+C");
@@ -103,7 +103,7 @@ public class CommandLine {
                     System.out.println("[-] random command has been finished: " + countCompleted);
                     master.close();
                 } else {
-                    sender = new FibonacciPubsubHandler();
+                    sender = new FibonacciPublisher();
                     sender.publish(numberMax);
                     sender.close();
                     System.out.println("[-] numberMax has been sent");

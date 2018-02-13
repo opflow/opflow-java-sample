@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-client</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.19</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-core</artifactId>
-            <version>0.1.16</version>
+            <version>0.1.19</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

@@ -2,4 +2,4 @@
 
 java -Dopflow.configuration=file:$HOME/opflow.properties \
      -Dlog4j.configuration=file:$HOME/log4j.properties \
-     -jar target/opflow-java-sample.jar $@
+     -jar target/opflow-java-sample-server.jar $@
