@@ -61,19 +61,19 @@ mvn compile
 To run worker, use the following command:
 
 ```shell
-mvn compile exec:exec -Pworker
+mvn compile exec:java -Pworker
 ```
 
 And master:
 
 ```shell
-mvn compile exec:exec -Pmaster
+mvn compile exec:java -Pmaster
 ```
 
 And Pub/Sub:
 
 ```shell
-mvn compile exec:exec -Ppubsub
+mvn compile exec:java -Ppubsub
 ```
 
 ## Run TDD test
