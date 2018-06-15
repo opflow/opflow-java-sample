@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-server</artifactId>
-    <version>0.1.19</version>
+    <version>0.1.23</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -11,6 +11,8 @@
         <final.version>1.0.0</final.version>
         <artifact.name>${project.artifactId}</artifact.name>
         <java.version>1.6</java.version>
+        <opflow.version>0.1.23</opflow.version>
+        <opflow-sample.version>${project.version}</opflow-sample.version>
     </properties>
 
     <repositories>
@@ -39,17 +41,17 @@
         <dependency>
             <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-core</artifactId>
-            <version>0.1.19</version>
+            <version>${opflow.version}</version>
         </dependency>
         <dependency>
             <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-java-sample-client</artifactId>
-            <version>0.1.19</version>
+            <version>${opflow-sample.version}</version>
         </dependency>
         <dependency>
             <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-java-sample-client</artifactId>
-            <version>0.1.19</version>
+            <version>${opflow-sample.version}</version>
             <type>test-jar</type>
         </dependency>
         <dependency>
@@ -167,12 +169,17 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-                                <argument>com.devebot.opflow.example.FibonacciRpcMaster</argument>
-                            </arguments>
+                            <mainClass>com.devebot.opflow.example.FibonacciRpcMaster</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
+                                    <value>true</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
+                                    <value>false</value>
+                                </property>
+                            </systemProperties>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -186,12 +193,17 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-                                <argument>com.devebot.opflow.example.FibonacciRpcWorker</argument>
-                            </arguments>
+                            <mainClass>com.devebot.opflow.example.FibonacciRpcWorker</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
+                                    <value>true</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
+                                    <value>false</value>
+                                </property>
+                            </systemProperties>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -205,12 +217,7 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-                                <argument>com.devebot.opflow.example.FibonacciPubsubHandler</argument>
-                            </arguments>
+                            <mainClass>com.devebot.opflow.example.FibonacciPubsubHandler</mainClass>
                         </configuration>
                     </plugin>
                 </plugins>
