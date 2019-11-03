@@ -10,7 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <final.version>1.0.0</final.version>
         <artifact.name>${project.artifactId}</artifact.name>
-        <java.version>1.6</java.version>
+        <java.version>1.7</java.version>
         <opflow.version>0.1.24</opflow.version>
         <opflow-sample.version>${project.version}</opflow-sample.version>
     </properties>
