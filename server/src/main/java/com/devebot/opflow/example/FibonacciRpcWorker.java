@@ -31,15 +31,15 @@ public class FibonacciRpcWorker {
     }
     
     public OpflowEngine.ConsumerInfo process() {
-        OpflowEngine.ConsumerInfo info = worker.process(new OpflowRpcListener() {
-            @Override
-            public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
-                LOG.debug("[+] Routine input: " + message.getBodyAsString());
-                return OpflowRpcListener.NEXT;
-            }
-        });
+//        OpflowEngine.ConsumerInfo info = worker.process(new OpflowRpcListener() {
+//            @Override
+//            public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
+//                LOG.debug("[+] Routine input: " + message.getBodyAsString());
+//                return OpflowRpcListener.NEXT;
+//            }
+//        });
         
-        worker.process(new String[] {"fibonacci", "fib"}, new OpflowRpcListener() {
+        OpflowEngine.ConsumerInfo info = worker.process(new String[] {"fibonacci", "fib"}, new OpflowRpcListener() {
             @Override
             public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
                 try {

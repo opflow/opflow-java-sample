@@ -53,7 +53,7 @@ public class FibonacciClientSteps {
     public void createCommander(@Named("commanderName") final String commanderName, 
             @Named("propFile") final String propFile) throws OpflowBootstrapException {
         commanders.put(commanderName, OpflowBuilder.createCommander(propFile));
-        if (LOG.isDebugEnabled()) LOG.debug("Commander[" + commanderName + "] has been created");
+        if (LOG.isDebugEnabled()) LOG.debug("Commander[" + commanderName + "] / [" + propFile + "] has been created");
     }
     
     @Given("a registered FibonacciCalculator interface in Commander named '$commanderName'")

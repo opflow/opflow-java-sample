@@ -82,7 +82,7 @@ public class FibonacciServer {
                     
                     // MANDATORY
                     response.emitCompleted(result);
-                } catch (final Exception ex) {
+                } catch (final OpflowOperationException ex) {
                     String errmsg = OpflowUtil.buildMap()
                             .put("exceptionClass", ex.getClass().getName())
                             .put("exceptionMessage", ex.getMessage())

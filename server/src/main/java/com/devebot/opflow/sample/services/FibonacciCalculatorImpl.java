@@ -26,7 +26,7 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
 
     @Override
     public FibonacciOutputList calc(FibonacciInputList list) {
-        ArrayList<FibonacciOutput> results = new ArrayList<FibonacciOutput>();
+        ArrayList<FibonacciOutput> results = new ArrayList<>();
         List<FibonacciInput> inputs = list.getList();
         for(FibonacciInput input: inputs) {
             results.add(this.calc(input.getNumber()));
