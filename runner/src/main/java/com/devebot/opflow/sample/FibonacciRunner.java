@@ -21,11 +21,10 @@ import io.undertow.util.PathTemplateMatch;
 public class FibonacciRunner {
     public static void main(String[] argv) throws Exception {
         Undertow server = Undertow.builder()
-                .addHttpListener(8888, "localhost")
+                .addHttpListener(8989, "0.0.0.0")
                 .setHandler(Handlers.pathTemplate().add("/fibonacci/{number}", new ItemHandler()))
                 .build();
         server.start();
-        System.out.println("FibonacciCommander start: ");
     }
 
     static class ItemHandler implements HttpHandler, AutoCloseable {
@@ -45,7 +44,7 @@ public class FibonacciRunner {
             // get the number
             PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
             String number = pathMatch.getParameters().get("number");
-            System.out.println("[+] Make a RPC call:");
+            System.out.println("[+] Make a RPC call with number: " + number);
             try {
                 FibonacciOutput output = fib.calc(Integer.parseInt(number));
                 System.out.println("[-] output: " + OpflowJsontool.toString(output));
