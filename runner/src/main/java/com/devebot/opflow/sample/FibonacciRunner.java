@@ -6,6 +6,7 @@ import com.devebot.opflow.OpflowJsontool;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.models.FibonacciOutput;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
+import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
 import io.undertow.Handlers;
 
 import io.undertow.Undertow;
@@ -34,7 +35,7 @@ public class FibonacciRunner {
 
         ItemHandler() throws OpflowBootstrapException {
             this.commander = OpflowBuilder.createCommander("client.properties");
-            this.fib = commander.registerType(FibonacciCalculator.class);
+            this.fib = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
         }
         
         @Override

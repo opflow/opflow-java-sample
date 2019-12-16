@@ -56,6 +56,11 @@
             <type>test-jar</type>
         </dependency>
         <dependency>
+            <groupId>com.devebot.opflow</groupId>
+            <artifactId>opflow-java-sample-server</artifactId>
+            <version>${opflow-sample.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>${undertow.version}</version>
