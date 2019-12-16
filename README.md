@@ -39,12 +39,12 @@ git clone https://github.com/opflow/opflow-java-sample.git
 cd opflow-java-sample
 ```
 
-### Install API/client
+### Install API/common
 
-Install `opflow-java-sample-client.jar` and `opflow-java-sample-client-tests.jar`:
+Install `opflow-java-sample-common.jar` and `opflow-java-sample-common-tests.jar`:
 
 ```
-cd client
+cd common
 mvn install
 cd ../
 ```
