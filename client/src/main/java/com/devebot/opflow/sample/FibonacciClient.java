@@ -19,7 +19,7 @@ import io.undertow.util.PathTemplateMatch;
  *
  * @author drupalex
  */
-public class FibonacciRunner {
+public class FibonacciClient {
     public static void main(String[] argv) throws Exception {
         Undertow server = Undertow.builder()
                 .addHttpListener(8989, "0.0.0.0")
