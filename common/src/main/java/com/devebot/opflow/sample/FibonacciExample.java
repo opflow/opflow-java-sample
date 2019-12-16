@@ -10,7 +10,7 @@ import com.devebot.opflow.sample.services.FibonacciCalculator;
  *
  * @author drupalex
  */
-public class FibonacciClient {
+public class FibonacciExample {
     public static void main(String[] argv) throws Exception {
         System.out.println("FibonacciCommander start: ");
         final OpflowCommander commander = OpflowBuilder.createCommander("client.properties");
