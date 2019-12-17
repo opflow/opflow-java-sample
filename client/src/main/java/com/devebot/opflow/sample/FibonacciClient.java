@@ -7,8 +7,9 @@ import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.models.FibonacciOutput;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
-import io.undertow.Handlers;
+import com.devebot.opflow.supports.OpflowRpcChecker;
 
+import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -69,12 +70,15 @@ public class FibonacciClient {
         @Override
         public void handleRequest(HttpServerExchange exchange) throws Exception {
             try {
+                OpflowRpcChecker.Info result = this.api.commander.ping();
+                if (!"ok".equals(result.getStatus())) {
+                    exchange.setStatusCode(503);
+                }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(OpflowJsontool.toString(this.api.commander.ping(), true));
+                exchange.getResponseSender().send(result.toString(true));
             } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-                
-                exchange.getResponseSender().send(exception.toString());
+                exchange.setStatusCode(500).getResponseSender().send(exception.toString());
             }
         }
     }
