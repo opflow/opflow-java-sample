@@ -24,8 +24,9 @@ public class FibonacciClient {
         FibonacciApi api = new FibonacciApi();
         Undertow server = Undertow.builder()
                 .addHttpListener(8989, "0.0.0.0")
-                .setHandler(Handlers.pathTemplate().add("/fibonacci/{number}", new CalcHandler(api)))
-                .setHandler(Handlers.pathTemplate().add("/ping", new PingHandler(api)))
+                .setHandler(Handlers.pathTemplate()
+                        .add("/fibonacci/{number}", new CalcHandler(api))
+                        .add("/ping", new PingHandler(api)))
                 .build();
         server.start();
     }
@@ -51,6 +52,7 @@ public class FibonacciClient {
                 exchange.getResponseSender().send(OpflowJsontool.toString(output));
             } catch (NumberFormatException exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                exchange.setStatusCode(500);
                 exchange.getResponseSender().send(exception.toString());
             }
         }
@@ -68,9 +70,10 @@ public class FibonacciClient {
         public void handleRequest(HttpServerExchange exchange) throws Exception {
             try {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(this.api.commander.ping().toString());
+                exchange.getResponseSender().send(OpflowJsontool.toString(this.api.commander.ping(), true));
             } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                
                 exchange.getResponseSender().send(exception.toString());
             }
         }
