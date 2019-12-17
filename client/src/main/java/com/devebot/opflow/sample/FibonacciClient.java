@@ -25,6 +25,7 @@ public class FibonacciClient {
         Undertow server = Undertow.builder()
                 .addHttpListener(8989, "0.0.0.0")
                 .setHandler(Handlers.pathTemplate().add("/fibonacci/{number}", new CalcHandler(api)))
+                .setHandler(Handlers.pathTemplate().add("/ping", new PingHandler(api)))
                 .build();
         server.start();
     }
@@ -39,8 +40,6 @@ public class FibonacciClient {
         
         @Override
         public void handleRequest(HttpServerExchange exchange) throws Exception {
-            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-
             // get the number
             PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
             String number = pathMatch.getParameters().get("number");
@@ -50,6 +49,26 @@ public class FibonacciClient {
                 System.out.println("[-] output: " + OpflowJsontool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsontool.toString(output));
+            } catch (NumberFormatException exception) {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                exchange.getResponseSender().send(exception.toString());
+            }
+        }
+    }
+
+    static class PingHandler implements HttpHandler {
+
+        private final FibonacciApi api;
+
+        PingHandler(FibonacciApi api) throws OpflowBootstrapException {
+            this.api = api;
+        }
+        
+        @Override
+        public void handleRequest(HttpServerExchange exchange) throws Exception {
+            try {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+                exchange.getResponseSender().send(this.api.commander.ping().toString());
             } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.getResponseSender().send(exception.toString());
