@@ -36,6 +36,7 @@ public class FibonacciClient {
         ItemHandler() throws OpflowBootstrapException {
             this.commander = OpflowBuilder.createCommander("client.properties");
             this.fib = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
+            System.out.println("[+> ping-pong result: " + this.commander.ping());
         }
         
         @Override

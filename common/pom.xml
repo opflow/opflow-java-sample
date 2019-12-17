@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-common</artifactId>
-    <version>0.1.24</version>
+    <version>0.1.25</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -11,7 +11,7 @@
         <final.version>1.0.0</final.version>
         <artifact.name>${project.artifactId}</artifact.name>
         <java.version>1.7</java.version>
-        <opflow.version>0.1.24</opflow.version>
+        <opflow.version>0.1.25</opflow.version>
         <opflow-sample.version>${project.version}</opflow-sample.version>
     </properties>
 
