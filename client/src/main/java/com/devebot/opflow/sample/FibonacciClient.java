@@ -90,7 +90,6 @@ public class FibonacciClient {
         FibonacciApi() throws OpflowBootstrapException {
             this.commander = OpflowBuilder.createCommander("client.properties");
             this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
-            System.out.println("[+> ping-pong result: " + this.commander.ping());
         }
         
         @Override

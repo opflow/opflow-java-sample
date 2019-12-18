@@ -125,4 +125,31 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>client</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>com.devebot.opflow.sample.FibonacciClient</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
+                                    <value>true</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
+                                    <value>false</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
