@@ -28,7 +28,11 @@ Install rabbitmq-server package:
 sudo apt-get install rabbitmq-server
 ```
 
-### Build from the latest source code
+## Getting started
+
+![Netbeans](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/opflow-netbeans-terminal.png)
+
+### Build `opflow-core` from the latest source code
 
 Clone the `master` branch from github:
 
@@ -43,7 +47,7 @@ Compile and install the package:
 mvn clean install
 ```
 
-## Run example
+### Get the example source code
 
 Clone source code from `github`:
 
@@ -52,9 +56,9 @@ git clone https://github.com/opflow/opflow-java-sample.git
 cd opflow-java-sample
 ```
 
-### Install API/common
+### Install the `common` package
 
-Install `opflow-java-sample-common.jar` and `opflow-java-sample-common-tests.jar`:
+Build and install the `opflow-java-sample-common.jar` and `opflow-java-sample-common-tests.jar` into the local repository:
 
 ```
 cd common
@@ -64,23 +68,33 @@ cd ../
 
 ### Run the workers
 
-Open a new `terminal` and change to `opflow-java-sample` directory.
+Open a new `terminal` and change to `opflow-java-sample/server` directory.
+Update the rabbitmq connection parameters in `src/main/resources/server.properties`:
+
+```properties
+opflow.uri=amqp://giong:qwerty@opflow-broker-default
+# ...
+```
 
 Compile `opflow-java-sample-server` and start the server (worker):
 
 ```shell
-cd server
 mvn clean compile exec:java -Pserver
 ```
 
 ### Run the client
 
-Open a new `terminal` and change to `opflow-java-sample` directory.
+Open a new `terminal` and change to `opflow-java-sample/client` directory.
+Update the rabbitmq connection parameters in `src/main/resources/client.properties`:
+
+```properties
+opflow.uri=amqp://giong:qwerty@opflow-broker-default
+# ...
+```
 
 Compile `opflow-java-sample-client` and start the web service on client:
 
 ```shell
-cd client
 mvn clean compile exec:java -Pclient
 ```
 
