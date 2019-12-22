@@ -7,14 +7,14 @@ import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.models.FibonacciOutput;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
-import com.devebot.opflow.supports.OpflowRpcChecker;
-
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import io.undertow.server.handlers.PathTemplateHandler;
 import io.undertow.util.Headers;
 import io.undertow.util.PathTemplateMatch;
+import java.util.Map;
 
 /**
  *
@@ -25,19 +25,43 @@ public class FibonacciClient {
         FibonacciApi api = new FibonacciApi();
         Undertow server = Undertow.builder()
                 .addHttpListener(8989, "0.0.0.0")
-                .setHandler(Handlers.pathTemplate()
-                        .add("/fibonacci/{number}", new CalcHandler(api))
-                        .add("/ping", new PingHandler(api)))
+                .setHandler(api.getPathTemplateHandler())
                 .build();
         server.start();
     }
 
+    static class FibonacciApi implements AutoCloseable {
+        private final OpflowCommander commander;
+        private final FibonacciCalculator calculator;
+        private final CalcHandler calcHandler;
+        
+        FibonacciApi() throws OpflowBootstrapException {
+            this.commander = OpflowBuilder.createCommander("client.properties");
+            this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
+            this.calcHandler = new CalcHandler(this.calculator);
+        }
+        
+        public PathTemplateHandler getPathTemplateHandler() {
+            PathTemplateHandler ptHandler = Handlers.pathTemplate()
+                    .add("/fibonacci/{number}", this.calcHandler);
+            for(Map.Entry<String, HttpHandler> entry:commander.getInfoHttpHandlers().entrySet()) {
+                ptHandler.add(entry.getKey(), entry.getValue());
+            }
+            return ptHandler;
+        }
+        
+        @Override
+        public void close() throws Exception {
+            commander.close();
+        }
+    }
+    
     static class CalcHandler implements HttpHandler {
         
-        private final FibonacciApi api;
+        private final FibonacciCalculator calculator;
 
-        CalcHandler(FibonacciApi api) throws OpflowBootstrapException {
-            this.api = api;
+        CalcHandler(FibonacciCalculator calculator) throws OpflowBootstrapException {
+            this.calculator = calculator;
         }
         
         @Override
@@ -47,7 +71,7 @@ public class FibonacciClient {
             String number = pathMatch.getParameters().get("number");
             System.out.println("[+] Make a RPC call with number: " + number);
             try {
-                FibonacciOutput output = this.api.calculator.calc(Integer.parseInt(number));
+                FibonacciOutput output = this.calculator.calc(Integer.parseInt(number));
                 System.out.println("[-] output: " + OpflowJsontool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsontool.toString(output));
@@ -56,45 +80,6 @@ public class FibonacciClient {
                 exchange.setStatusCode(500);
                 exchange.getResponseSender().send(exception.toString());
             }
-        }
-    }
-
-    static class PingHandler implements HttpHandler {
-
-        private final FibonacciApi api;
-
-        PingHandler(FibonacciApi api) throws OpflowBootstrapException {
-            this.api = api;
-        }
-        
-        @Override
-        public void handleRequest(HttpServerExchange exchange) throws Exception {
-            try {
-                OpflowRpcChecker.Info result = this.api.commander.ping();
-                if (!"ok".equals(result.getStatus())) {
-                    exchange.setStatusCode(503);
-                }
-                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(result.toString(true));
-            } catch (Exception exception) {
-                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-                exchange.setStatusCode(500).getResponseSender().send(exception.toString());
-            }
-        }
-    }
-    
-    static class FibonacciApi implements AutoCloseable {
-        private final OpflowCommander commander;
-        private final FibonacciCalculator calculator;
-        
-        FibonacciApi() throws OpflowBootstrapException {
-            this.commander = OpflowBuilder.createCommander("client.properties");
-            this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
-        }
-        
-        @Override
-        public void close() throws Exception {
-            commander.close();
         }
     }
 }
