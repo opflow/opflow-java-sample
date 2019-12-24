@@ -30,7 +30,7 @@ sudo apt-get install rabbitmq-server
 
 ## Getting started
 
-![Netbeans](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/opflow-netbeans-terminal.png)
+![Arch](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/opflow-java-sample-arch.png)
 
 ### Build `opflow-core` from the latest source code
 
@@ -97,6 +97,8 @@ Compile `opflow-java-sample-client` and start the web service on client:
 ```shell
 mvn clean compile exec:java -Pclient
 ```
+
+![Netbeans](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/opflow-netbeans-terminal.png)
 
 ### Try the `ping` and the `fibonacci` actions
 
