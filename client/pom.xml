@@ -137,6 +137,10 @@
                                     <key>OPFLOW_TAGS_EMBEDDABLE</key>
                                     <value>false</value>
                                 </property>
+                                <property>
+                                    <key>OPFLOW_OMIT_PING_LOGS</key>
+                                    <value>true</value>
+                                </property>
                             </systemProperties>
                         </configuration>
                     </plugin>
