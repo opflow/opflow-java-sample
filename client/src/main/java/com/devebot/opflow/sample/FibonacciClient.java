@@ -39,6 +39,16 @@ public class FibonacciClient {
                 .addHttpListener(8989, "0.0.0.0")
                 .setHandler(api.getPathTemplateHandler())
                 .build();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    server.stop();
+                    api.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         server.start();
     }
 

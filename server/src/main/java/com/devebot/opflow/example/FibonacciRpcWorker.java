@@ -11,6 +11,8 @@ import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowOperationException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +32,23 @@ public class FibonacciRpcWorker {
         this.worker = OpflowBuilder.createRpcWorker();
     }
     
-    public OpflowEngine.ConsumerInfo process() {
-//        OpflowEngine.ConsumerInfo info = worker.process(new OpflowRpcListener() {
-//            @Override
-//            public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
-//                LOG.debug("[+] Routine input: " + message.getBodyAsString());
-//                return OpflowRpcListener.NEXT;
-//            }
-//        });
+    public List<OpflowEngine.ConsumerInfo> process() {
+
+        List<OpflowEngine.ConsumerInfo> consumers = new ArrayList<>();
+        OpflowEngine.ConsumerInfo info;
+
+        if (1 + 2 == 5) {
+            info = worker.process(new OpflowRpcListener() {
+                @Override
+                public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
+                    LOG.debug("[+] Routine input: " + message.getBodyAsString());
+                    return OpflowRpcListener.NEXT;
+                }
+            });
+            consumers.add(info);
+        }
         
-        OpflowEngine.ConsumerInfo info = worker.process(new String[] {"fibonacci", "fib"}, new OpflowRpcListener() {
+        info = worker.process(new String[] {"fibonacci", "fib"}, new OpflowRpcListener() {
             @Override
             public Boolean processMessage(OpflowMessage message, OpflowRpcResponse response) throws IOException {
                 try {
@@ -90,8 +99,9 @@ public class FibonacciRpcWorker {
                 return null;
             }
         });
+        consumers.add(info);
         
-        return info;
+        return consumers;
     }
     
     public String checkState() {

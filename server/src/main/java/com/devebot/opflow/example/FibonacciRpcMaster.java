@@ -21,22 +21,34 @@ public class FibonacciRpcMaster {
     }
     
     public OpflowRpcRequest request(final int number) {
-        return request(number, 180000);
+        return request(number, 180000, false);
     }
     
     public OpflowRpcRequest request(final int number, final long timeout) {
-        return master.request("fibonacci",
+        return request(number, timeout, false);
+    }
+    
+    public OpflowRpcRequest request(final int number, final boolean forked) {
+        return request(number, 180000, forked);
+    }
+    
+    public OpflowRpcRequest request(final int number, final long timeout, final boolean forked) {
+        System.out.println("[+] Request[" + number + "] starting");
+        OpflowRpcRequest req = master.request("fibonacci",
                 OpflowUtil.buildMap().put("number", number).toString(),
                 OpflowUtil.buildMap(new OpflowUtil.MapListener() {
                     @Override
                     public void transform(Map<String, Object> opts) {
                         if (timeout > 0) opts.put("timeout", timeout);
+                        if (forked) opts.put("mode", "forked");
                     }
                 }).toMap());
+        System.out.println("[x] Request[" + number + "] finished");
+        return req;
     }
     
     public Queue<FibonacciData.Pair> random(final int total, final int left, final int right) {
-        final Queue<FibonacciData.Pair> sessions = new ConcurrentLinkedQueue<FibonacciData.Pair>();
+        final Queue<FibonacciData.Pair> sessions = new ConcurrentLinkedQueue<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -62,8 +74,8 @@ public class FibonacciRpcMaster {
         
         System.out.println("[+] ExampleMaster request");
 
-        OpflowRpcRequest req1 = rpc.request(20);
-        OpflowRpcRequest req2 = rpc.request(30);
+        OpflowRpcRequest req1 = rpc.request(20, true);
+        OpflowRpcRequest req2 = rpc.request(30, true);
         
         OpflowRpcRequest[] reqs = new OpflowRpcRequest[10];
         for(int i = 0; i<reqs.length; i++) {
