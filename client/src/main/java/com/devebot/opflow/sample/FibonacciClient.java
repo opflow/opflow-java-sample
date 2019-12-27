@@ -10,10 +10,6 @@ import com.devebot.opflow.sample.models.FibonacciOutput;
 import com.devebot.opflow.sample.services.AlertSender;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonReader;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -22,8 +18,6 @@ import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathTemplateHandler;
 import io.undertow.util.Headers;
 import io.undertow.util.PathTemplateMatch;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 /**
@@ -31,7 +25,6 @@ import java.util.Map;
  * @author drupalex
  */
 public class FibonacciClient {
-    private static final Gson GSON = new Gson();
     
     public static void main(String[] argv) throws Exception {
         FibonacciApi api = new FibonacciApi();
@@ -41,7 +34,7 @@ public class FibonacciClient {
                 .build();
         server.start();
     }
-
+    
     static class FibonacciApi implements AutoCloseable {
         private final OpflowCommander commander;
         private final AlertSender alertSender;
@@ -85,14 +78,12 @@ public class FibonacciClient {
         public void handleRequest(HttpServerExchange exchange) throws Exception {
             try {
                 System.out.println("[+] Alert");
-                AlertMessage message;
-                JsonReader reader = new JsonReader(new InputStreamReader(exchange.getInputStream(), "UTF-8"));
-                message = GSON.fromJson(reader, AlertMessage.class);
+                AlertMessage message = OpflowJsontool.toObject(exchange.getInputStream(), AlertMessage.class);
                 System.out.println("[-] message: " + OpflowJsontool.toString(message));
                 this.alertSender.notify(message);
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsontool.toString(message));
-            } catch (JsonIOException | JsonSyntaxException | IOException exception) {
+            } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
                 exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
