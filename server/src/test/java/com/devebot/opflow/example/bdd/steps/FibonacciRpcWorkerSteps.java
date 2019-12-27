@@ -4,6 +4,7 @@ import com.devebot.opflow.OpflowEngine.ConsumerInfo;
 import com.devebot.opflow.example.FibonacciRpcWorker;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -25,8 +26,10 @@ public class FibonacciRpcWorkerSteps {
     public void givenFibonacciWorkers(final String workerName) throws OpflowBootstrapException {
         FibonacciRpcWorker worker = new FibonacciRpcWorker();
         workers.put(workerName, worker);
-        ConsumerInfo info = worker.process();
-        consumerTags.put(workerName, info.getConsumerTag());
+        List<ConsumerInfo> infos = worker.process();
+        for(ConsumerInfo info : infos) {
+            consumerTags.put(workerName, info.getConsumerTag());
+        }
     }
     
     @When("I close RpcWorker($workerName)")

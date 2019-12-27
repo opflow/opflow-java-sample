@@ -28,8 +28,9 @@ public class FibonacciClient {
     
     public static void main(String[] argv) throws Exception {
         FibonacciApi api = new FibonacciApi();
+        api.serve();
         Undertow server = Undertow.builder()
-                .addHttpListener(8989, "0.0.0.0")
+                .addHttpListener(8888, "0.0.0.0")
                 .setHandler(api.getPathTemplateHandler())
                 .build();
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -68,6 +69,10 @@ public class FibonacciClient {
                 ptHandler.add(entry.getKey(), entry.getValue());
             }
             return ptHandler;
+        }
+        
+        public void serve() {
+            this.commander.serve();
         }
         
         @Override
