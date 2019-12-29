@@ -18,7 +18,6 @@ import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathTemplateHandler;
 import io.undertow.util.Headers;
 import io.undertow.util.PathTemplateMatch;
-import java.util.Map;
 
 /**
  *
@@ -65,9 +64,6 @@ public class FibonacciClient {
             PathTemplateHandler ptHandler = Handlers.pathTemplate()
                     .add("/alert", new BlockingHandler(this.alertHandler))
                     .add("/fibonacci/{number}", this.calcHandler);
-            for(Map.Entry<String, HttpHandler> entry : commander.getInfoHttpHandlers().entrySet()) {
-                ptHandler.add(entry.getKey(), entry.getValue());
-            }
             return ptHandler;
         }
         
