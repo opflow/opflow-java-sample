@@ -106,7 +106,7 @@ Open the web browser and make a HTTP request to `http://localhost:8989/ping`:
 
 ![Ping](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/browser-get-ping.png)
 
-Calculate the fibonacci of a number with url `http://localhost:8989/fibonacci/29`:
+Calculate the fibonacci of a number with url `http://localhost:8888/fibonacci/29`:
 
 ![Calc](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/browser-get-calc.png)
 

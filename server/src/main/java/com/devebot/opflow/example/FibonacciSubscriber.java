@@ -2,7 +2,7 @@ package com.devebot.opflow.example;
 
 import com.devebot.opflow.OpflowEngine;
 import com.devebot.opflow.OpflowBuilder;
-import com.devebot.opflow.OpflowConfigLoader;
+import com.devebot.opflow.OpflowConfig;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowPubsubHandler;
 import com.devebot.opflow.OpflowPubsubListener;
@@ -72,7 +72,7 @@ public class FibonacciSubscriber {
         props.setProperty("opflow.pubsub.serverCertFile", "/home/drupalex/projects/opflow/opflow-weaver/sslstore/server/rabbit-node3.cert.pem");
         // props.setProperty("opflow.pubsub.trustStoreFile", "/home/drupalex/projects/opflow/opflow-weaver/sslstore/server/rabbit-node3.tks");
         // props.setProperty("opflow.pubsub.trustPassphrase", "rabbitstore");
-        this.handler = OpflowBuilder.createPubsubHandler(OpflowConfigLoader.mergeConfiguration(null, props), propFile, true);
+        this.handler = OpflowBuilder.createPubsubHandler(OpflowConfig.mergeConfiguration(null, props), propFile, true);
         this.setting = (setting != null) ? setting : new FibonacciSetting();
     }
     
