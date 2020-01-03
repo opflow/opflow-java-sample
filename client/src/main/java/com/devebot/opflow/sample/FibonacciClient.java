@@ -6,10 +6,12 @@ import com.devebot.opflow.OpflowJsontool;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.models.AlertMessage;
+import com.devebot.opflow.sample.models.FibonacciInput;
 import com.devebot.opflow.sample.models.FibonacciOutput;
 import com.devebot.opflow.sample.services.AlertSender;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
+import com.devebot.opflow.sample.utils.Randomizer;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -18,6 +20,8 @@ import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathTemplateHandler;
 import io.undertow.util.Headers;
 import io.undertow.util.PathTemplateMatch;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -51,6 +55,7 @@ public class FibonacciClient {
         private final AlertHandler alertHandler;
         private final FibonacciCalculator calculator;
         private final CalcHandler calcHandler;
+        private final RandomHandler randomHandler;
         
         FibonacciApi() throws OpflowBootstrapException {
             this.commander = OpflowBuilder.createCommander("client.properties");
@@ -58,12 +63,14 @@ public class FibonacciClient {
             this.alertHandler = new AlertHandler(this.alertSender);
             this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
             this.calcHandler = new CalcHandler(this.calculator);
+            this.randomHandler = new RandomHandler(this.calculator);
         }
         
         public PathTemplateHandler getPathTemplateHandler() {
             PathTemplateHandler ptHandler = Handlers.pathTemplate()
                     .add("/alert", new BlockingHandler(this.alertHandler))
-                    .add("/fibonacci/{number}", this.calcHandler);
+                    .add("/fibonacci/{number}", this.calcHandler)
+                    .add("/random/{total}", this.randomHandler);
             return ptHandler;
         }
         
@@ -124,6 +131,43 @@ public class FibonacciClient {
                 System.out.println("[-] output: " + OpflowJsontool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsontool.toString(output));
+            } catch (NumberFormatException exception) {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                exchange.setStatusCode(500);
+                exchange.getResponseSender().send(exception.toString());
+            }
+        }
+    }
+    
+    static class RandomHandler implements HttpHandler {
+        
+        private final FibonacciCalculator calculator;
+
+        RandomHandler(FibonacciCalculator calculator) throws OpflowBootstrapException {
+            this.calculator = calculator;
+        }
+        
+        @Override
+        public void handleRequest(HttpServerExchange exchange) throws Exception {
+            // get the number
+            PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
+            String totalStr = pathMatch.getParameters().get("total");
+            System.out.println("[+] Make a RPC call with number: " + totalStr);
+            try {
+                List<FibonacciOutput> list = new ArrayList<>();
+                Integer total = Integer.parseInt(totalStr);
+                if (total > 0) {
+                    for (int i = 0; i<total; i++) {
+                        int n = Randomizer.random(2, 45);
+                        if (n % 2 == 0) {
+                            list.add(this.calculator.calc(n));
+                        } else {
+                            list.add(this.calculator.calc(new FibonacciInput(n)));
+                        }
+                    }
+                }
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+                exchange.getResponseSender().send(OpflowJsontool.toString(list, true));
             } catch (NumberFormatException exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);

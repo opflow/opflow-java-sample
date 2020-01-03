@@ -3,7 +3,7 @@ package com.devebot.opflow.example;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.devebot.opflow.OpflowRpcResult;
-import com.devebot.opflow.OpflowTask;
+import com.devebot.opflow.OpflowTimeout;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
@@ -86,7 +86,7 @@ public class CommandLine {
                     int countCompleted = 0;
                     System.out.println("[+] calculate Fibonacci() of " + total + " random number in range [" +
                             rangeInt[0] + ", " + rangeInt[1] + "].");
-                    OpflowTask.Countdown countdown = new OpflowTask.Countdown(total);
+                    OpflowTimeout.Countdown countdown = new OpflowTimeout.Countdown(total);
                     master = new FibonacciRpcMaster();
                     Queue<FibonacciData.Pair> queue = master.random(total, rangeInt[0], rangeInt[1]);
                     try {

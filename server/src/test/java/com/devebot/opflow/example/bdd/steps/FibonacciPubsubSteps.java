@@ -1,7 +1,7 @@
 package com.devebot.opflow.example.bdd.steps;
 
 import com.devebot.opflow.OpflowEngine.ConsumerInfo;
-import com.devebot.opflow.OpflowTask;
+import com.devebot.opflow.OpflowTimeout;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.example.FibonacciPubsubHandler;
 import com.devebot.opflow.exception.OpflowBootstrapException;
@@ -42,7 +42,7 @@ public class FibonacciPubsubSteps {
             @Named("propFile") final String propFile) throws OpflowBootstrapException {
         FibonacciPubsubHandler pubsub = (propFile == null) ? 
                 new FibonacciPubsubHandler() : new FibonacciPubsubHandler(propFile);
-        pubsub.setCountdown(new OpflowTask.Countdown());
+        pubsub.setCountdown(new OpflowTimeout.Countdown());
         pubsubs.put(pubsubName, pubsub);
         failedNumbers.clear();
     }

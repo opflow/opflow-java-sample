@@ -6,7 +6,7 @@ import com.devebot.opflow.OpflowConfig;
 import com.devebot.opflow.OpflowMessage;
 import com.devebot.opflow.OpflowPubsubHandler;
 import com.devebot.opflow.OpflowPubsubListener;
-import com.devebot.opflow.OpflowTask;
+import com.devebot.opflow.OpflowTimeout;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowOperationException;
 import com.google.gson.JsonObject;
@@ -45,7 +45,7 @@ public class FibonacciPubsubHandler {
             }
         }
     };
-    private OpflowTask.Countdown countdown;
+    private OpflowTimeout.Countdown countdown;
     
     public FibonacciPubsubHandler() throws OpflowBootstrapException {
         this(null, null);
@@ -109,11 +109,11 @@ public class FibonacciPubsubHandler {
         handler.close();
     }
     
-    public OpflowTask.Countdown getCountdown() {
+    public OpflowTimeout.Countdown getCountdown() {
         return countdown;
     }
     
-    public void setCountdown(OpflowTask.Countdown countdown) {
+    public void setCountdown(OpflowTimeout.Countdown countdown) {
         this.countdown = countdown;
     }
 
