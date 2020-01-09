@@ -131,7 +131,7 @@ public class FibonacciClient {
                 System.out.println("[-] output: " + OpflowJsontool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsontool.toString(output));
-            } catch (NumberFormatException exception) {
+            } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
                 exchange.getResponseSender().send(exception.toString());
