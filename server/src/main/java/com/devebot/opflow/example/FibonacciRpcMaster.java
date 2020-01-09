@@ -96,7 +96,6 @@ public class FibonacciRpcMaster {
         
         // Transforms OpflowRpcRequest object to OpflowRpcResult object
         OpflowRpcResult result2 = req2.extractResult();
-        System.out.println("[-] message2 worker: " + result2.getWorkerTag());
         for(OpflowRpcResult.Step step: result2.getProgress()) {
             System.out.println("[-] message2 percent: " + step.getPercent());
         }
@@ -105,8 +104,6 @@ public class FibonacciRpcMaster {
         
         for(int i = 0; i<reqs.length; i++) {
             OpflowRpcResult rsts = reqs[i].extractResult();
-            System.out.println("[-] reqs[" + i + "] result: " + rsts.getValueAsString() +
-                    " from worker: " + rsts.getWorkerTag());
         }
         System.out.println();
         

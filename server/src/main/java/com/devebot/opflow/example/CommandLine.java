@@ -145,7 +145,6 @@ public class CommandLine {
     }
     
     private void printResult(int index, int number, OpflowRpcResult result) {
-        System.out.println("[-] #" + index + " ConsumerID: " + result.getWorkerTag());
         for(OpflowRpcResult.Step step: result.getProgress()) {
             System.out.println("[-] #" + index + " Fibonacci(" + number + ") percent: " + step.getPercent());
         }
