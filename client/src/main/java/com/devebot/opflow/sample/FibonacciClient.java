@@ -6,6 +6,7 @@ import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowRequestSuspendException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
+import com.devebot.opflow.exception.OpflowWorkerNotFoundException;
 import com.devebot.opflow.sample.models.AlertMessage;
 import com.devebot.opflow.sample.models.FibonacciInput;
 import com.devebot.opflow.sample.models.FibonacciOutput;
@@ -147,6 +148,14 @@ public class FibonacciClient {
                 exchange.setStatusCode(598);
                 exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
                         .put("reason", "timeout")
+                        .put("message", e.getMessage())
+                        .toString(true));
+            }
+            catch (OpflowWorkerNotFoundException e) {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
+                exchange.setStatusCode(404);
+                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                        .put("reason", "disabled")
                         .put("message", e.getMessage())
                         .toString(true));
             }
