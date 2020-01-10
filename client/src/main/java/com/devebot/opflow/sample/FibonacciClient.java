@@ -173,15 +173,23 @@ public class FibonacciClient {
             String totalStr = pathMatch.getParameters().get("total");
             System.out.println("[+] Make a RPC call with number: " + totalStr);
             try {
-                List<FibonacciOutput> list = new ArrayList<>();
+                List<Object> list = new ArrayList<>();
                 Integer total = Integer.parseInt(totalStr);
                 if (total > 0) {
                     for (int i = 0; i<total; i++) {
                         int n = Randomizer.random(2, 45);
-                        if (n % 2 == 0) {
-                            list.add(this.calculator.calc(n));
-                        } else {
-                            list.add(this.calculator.calc(new FibonacciInput(n)));
+                        try {
+                            if (n % 2 == 0) {
+                                list.add(this.calculator.calc(n));
+                            } else {
+                                list.add(this.calculator.calc(new FibonacciInput(n)));
+                            }
+                        } catch (Exception e) {
+                            list.add(OpflowUtil.buildOrderedMap()
+                                    .put("number", n)
+                                    .put("errorClass", e.getClass().getName())
+                                    .put("errorMessage", e.getMessage())
+                                    .toMap());
                         }
                     }
                 }
