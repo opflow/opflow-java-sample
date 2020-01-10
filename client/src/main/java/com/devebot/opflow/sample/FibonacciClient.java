@@ -2,9 +2,10 @@ package com.devebot.opflow.sample;
 
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
-import com.devebot.opflow.OpflowJsontool;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
+import com.devebot.opflow.exception.OpflowRequestSuspendException;
+import com.devebot.opflow.exception.OpflowRequestTimeoutException;
 import com.devebot.opflow.sample.models.AlertMessage;
 import com.devebot.opflow.sample.models.FibonacciInput;
 import com.devebot.opflow.sample.models.FibonacciOutput;
@@ -12,6 +13,7 @@ import com.devebot.opflow.sample.services.AlertSender;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
 import com.devebot.opflow.sample.utils.Randomizer;
+import com.devebot.opflow.supports.OpflowJsonTool;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -96,11 +98,11 @@ public class FibonacciClient {
         public void handleRequest(HttpServerExchange exchange) throws Exception {
             try {
                 System.out.println("[+] Alert");
-                AlertMessage message = OpflowJsontool.toObject(exchange.getInputStream(), AlertMessage.class);
-                System.out.println("[-] message: " + OpflowJsontool.toString(message));
+                AlertMessage message = OpflowJsonTool.toObject(exchange.getInputStream(), AlertMessage.class);
+                System.out.println("[-] message: " + OpflowJsonTool.toString(message));
                 this.alertSender.notify(message);
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(OpflowJsontool.toString(message));
+                exchange.getResponseSender().send(OpflowJsonTool.toString(message));
             } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
@@ -128,10 +130,27 @@ public class FibonacciClient {
             System.out.println("[+] Make a RPC call with number: " + number);
             try {
                 FibonacciOutput output = this.calculator.calc(Integer.parseInt(number));
-                System.out.println("[-] output: " + OpflowJsontool.toString(output));
+                System.out.println("[-] output: " + OpflowJsonTool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(OpflowJsontool.toString(output));
-            } catch (Exception exception) {
+                exchange.getResponseSender().send(OpflowJsonTool.toString(output));
+            }
+            catch (OpflowRequestSuspendException e) {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
+                exchange.setStatusCode(530);
+                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                        .put("reason", "suspend")
+                        .put("message", e.getMessage())
+                        .toString(true));
+            }
+            catch (OpflowRequestTimeoutException e) {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
+                exchange.setStatusCode(598);
+                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                        .put("reason", "timeout")
+                        .put("message", e.getMessage())
+                        .toString(true));
+            }
+            catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
                 exchange.getResponseSender().send(exception.toString());
@@ -167,7 +186,7 @@ public class FibonacciClient {
                     }
                 }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(OpflowJsontool.toString(list, true));
+                exchange.getResponseSender().send(OpflowJsonTool.toString(list, true));
             } catch (NumberFormatException exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
