@@ -24,14 +24,19 @@ import io.undertow.server.handlers.PathTemplateHandler;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
 import io.undertow.util.PathTemplateMatch;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author drupalex
  */
 public class FibonacciClient {
+    
+    private final static Logger LOG = LoggerFactory.getLogger(FibonacciClient.class);
     
     public static void main(String[] argv) throws Exception {
         FibonacciApi api = new FibonacciApi();
@@ -134,9 +139,17 @@ public class FibonacciClient {
             // get the number
             PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
             String number = pathMatch.getParameters().get("number");
+            FibonacciInputItem data = new FibonacciInputItem(Integer.parseInt(number), requestId);
+            
             System.out.println("[+] Make a RPC call with number: " + number + " with requestId: " + requestId);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(MessageFormat.format("Request[{0}] - calc({1}) with number: {2}", 
+                        new Object[] {
+                            data.getRequestId(), FibonacciInputItem.class.getCanonicalName(), data.getNumber()
+                        }));
+            }
             try {
-                FibonacciOutputItem output = this.calculator.calc(new FibonacciInputItem(Integer.parseInt(number), requestId));
+                FibonacciOutputItem output = this.calculator.calc(data);
                 System.out.println("[-] output: " + OpflowJsonTool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsonTool.toString(output));
