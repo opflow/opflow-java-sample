@@ -4,13 +4,13 @@ package com.devebot.opflow.sample.models;
  *
  * @author drupalex
  */
-public class FibonacciOutput {
+public class FibonacciOutputItem {
     
     private final long value;
     private final int step;
     private final int number;
 
-    public FibonacciOutput(long value, int step, int number) {
+    public FibonacciOutputItem(long value, int step, int number) {
         this.value = value;
         this.step = step;
         this.number = number;

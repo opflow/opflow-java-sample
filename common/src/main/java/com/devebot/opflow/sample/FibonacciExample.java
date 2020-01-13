@@ -3,7 +3,7 @@ package com.devebot.opflow.sample;
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowJsontool;
-import com.devebot.opflow.sample.models.FibonacciOutput;
+import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 
 /**
@@ -18,7 +18,7 @@ public class FibonacciExample {
         if (true) {
             System.out.println("[+] Make a RPC call:");
             try {
-                FibonacciOutput output = fib.calc(45);
+                FibonacciOutputItem output = fib.calc(45);
                 System.out.println("[-] output: " + OpflowJsontool.toString(output));
             } finally {
                 System.out.println("[-] closing the commander");
@@ -29,7 +29,7 @@ public class FibonacciExample {
                 @Override
                 public void run() {
                     System.out.println("[+] Make a RPC call:");
-                    FibonacciOutput output1 = fib.calc(45);
+                    FibonacciOutputItem output1 = fib.calc(45);
                 }
             };
             t.start();

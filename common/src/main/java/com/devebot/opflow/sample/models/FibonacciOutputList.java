@@ -8,22 +8,22 @@ import java.util.List;
  * @author drupalex
  */
 public class FibonacciOutputList {
-    private final List<FibonacciOutput> list = new ArrayList<FibonacciOutput>();
+    private final List<FibonacciOutputItem> list = new ArrayList<>();
 
     public FibonacciOutputList() {
     }
 
-    public FibonacciOutputList(List<FibonacciOutput> init) {
+    public FibonacciOutputList(List<FibonacciOutputItem> init) {
         list.addAll(init);
     }
 
-    public List<FibonacciOutput> getList() {
-        List<FibonacciOutput> copied = new ArrayList<FibonacciOutput>();
+    public List<FibonacciOutputItem> getList() {
+        List<FibonacciOutputItem> copied = new ArrayList<>();
         copied.addAll(list);
         return copied;
     }
     
-    public void add(FibonacciOutput item) {
+    public void add(FibonacciOutputItem item) {
         list.add(item);
     }
 }

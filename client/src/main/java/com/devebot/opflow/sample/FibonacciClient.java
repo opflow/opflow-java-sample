@@ -8,8 +8,8 @@ import com.devebot.opflow.exception.OpflowRequestSuspendException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
 import com.devebot.opflow.exception.OpflowWorkerNotFoundException;
 import com.devebot.opflow.sample.models.AlertMessage;
-import com.devebot.opflow.sample.models.FibonacciInput;
-import com.devebot.opflow.sample.models.FibonacciOutput;
+import com.devebot.opflow.sample.models.FibonacciInputItem;
+import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.services.AlertSender;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
@@ -21,6 +21,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathTemplateHandler;
+import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
 import io.undertow.util.PathTemplateMatch;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class FibonacciClient {
                 .setHandler(api.getPathTemplateHandler())
                 .build();
         Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
             public void run() {
                 try {
                     server.stop();
@@ -50,6 +52,7 @@ public class FibonacciClient {
             }
         });
         server.start();
+        System.out.println("[*] Listening for HTTP on 0.0.0.0:8888");
     }
     
     static class FibonacciApi implements AutoCloseable {
@@ -125,12 +128,15 @@ public class FibonacciClient {
         
         @Override
         public void handleRequest(HttpServerExchange exchange) throws Exception {
+            // get the requestId
+            HeaderMap headers = exchange.getRequestHeaders();
+            String requestId = headers.getFirst("X-Request-Id");
             // get the number
             PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
             String number = pathMatch.getParameters().get("number");
-            System.out.println("[+] Make a RPC call with number: " + number);
+            System.out.println("[+] Make a RPC call with number: " + number + " with requestId: " + requestId);
             try {
-                FibonacciOutput output = this.calculator.calc(Integer.parseInt(number));
+                FibonacciOutputItem output = this.calculator.calc(new FibonacciInputItem(Integer.parseInt(number), requestId));
                 System.out.println("[-] output: " + OpflowJsonTool.toString(output));
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsonTool.toString(output));
@@ -191,7 +197,7 @@ public class FibonacciClient {
                             if (n % 2 == 0) {
                                 list.add(this.calculator.calc(n));
                             } else {
-                                list.add(this.calculator.calc(new FibonacciInput(n)));
+                                list.add(this.calculator.calc(new FibonacciInputItem(n)));
                             }
                         } catch (Exception e) {
                             list.add(OpflowUtil.buildOrderedMap()

@@ -6,9 +6,9 @@ import com.devebot.opflow.OpflowJsontool;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
-import com.devebot.opflow.sample.models.FibonacciInput;
+import com.devebot.opflow.sample.models.FibonacciInputItem;
 import com.devebot.opflow.sample.models.FibonacciInputList;
-import com.devebot.opflow.sample.models.FibonacciOutput;
+import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.models.FibonacciOutputList;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class FibonacciClientSteps {
     public void callCommanderCalc(@Named("commanderName") final String commanderName,
             @Named("number") final int number) throws OpflowBootstrapException {
         FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
-        FibonacciOutput result = calculator.calc(new FibonacciInput(number));
+        FibonacciOutputItem result = calculator.calc(new FibonacciInputItem(number));
         if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutput: " + OpflowJsontool.toString(result));
         getContext(commanderName).put("output", result);
     }
@@ -78,7 +78,7 @@ public class FibonacciClientSteps {
         FibonacciInputList list = new FibonacciInputList();
         Integer[] integers = OpflowUtil.splitByComma(numbers, Integer.class);
         for(Integer integer: integers) {
-            list.add(new FibonacciInput(integer));
+            list.add(new FibonacciInputItem(integer));
         }
         FibonacciOutputList results = calculator.calc(list);
         if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutputList: " + OpflowJsontool.toString(results));
@@ -89,7 +89,7 @@ public class FibonacciClientSteps {
     public void verifyCommanderCalcMethod(@Named("commanderName") final String commanderName,
             @Named("number") final int number,
             @Named("result") final int result) throws OpflowBootstrapException {
-        FibonacciOutput singleResult = (FibonacciOutput) getContext(commanderName).get("output");
+        FibonacciOutputItem singleResult = (FibonacciOutputItem) getContext(commanderName).get("output");
         MatcherAssert.assertThat(singleResult.getNumber(), Matchers.equalTo(number));
         MatcherAssert.assertThat((int)singleResult.getValue(), Matchers.equalTo(result));
     }

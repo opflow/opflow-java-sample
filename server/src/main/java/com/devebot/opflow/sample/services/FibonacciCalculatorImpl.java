@@ -1,12 +1,15 @@
 package com.devebot.opflow.sample.services;
 
 import com.devebot.opflow.sample.business.FibonacciGenerator;
-import com.devebot.opflow.sample.models.FibonacciInput;
+import com.devebot.opflow.sample.models.FibonacciInputItem;
 import com.devebot.opflow.sample.models.FibonacciInputList;
-import com.devebot.opflow.sample.models.FibonacciOutput;
+import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.models.FibonacciOutputList;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -14,21 +17,35 @@ import java.util.List;
  */
 public class FibonacciCalculatorImpl implements FibonacciCalculator {
 
+    private final static Logger LOG = LoggerFactory.getLogger(FibonacciCalculatorImpl.class);
+
     @Override
-    public FibonacciOutput calc(int number) {
+    public FibonacciOutputItem calc(int number) {
         return new FibonacciGenerator(number).finish();
     }
 
     @Override
-    public FibonacciOutput calc(FibonacciInput data) {
+    public FibonacciOutputItem calc(FibonacciInputItem data) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(MessageFormat.format("Request[{0}] - calc({1}) with number: {2}", 
+                    new Object[] {
+                        data.getRequestId(), FibonacciInputItem.class.getCanonicalName(), data.getNumber()
+                    }));
+        }
         return this.calc(data.getNumber());
     }
 
     @Override
     public FibonacciOutputList calc(FibonacciInputList list) {
-        ArrayList<FibonacciOutput> results = new ArrayList<>();
-        List<FibonacciInput> inputs = list.getList();
-        for(FibonacciInput input: inputs) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(MessageFormat.format("Request[{0}] - calc({1})", 
+                    new Object[] {
+                        list.getRequestId(), FibonacciInputList.class.getCanonicalName()
+                    }));
+        }
+        ArrayList<FibonacciOutputItem> results = new ArrayList<>();
+        List<FibonacciInputItem> inputs = list.getList();
+        for(FibonacciInputItem input: inputs) {
             results.add(this.calc(input.getNumber()));
         }
         return new FibonacciOutputList(results);

@@ -191,6 +191,38 @@
             </build>
         </profile>
         <profile>
+            <id>server-log4j-amqp</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.devebot.opflow</groupId>
+                    <artifactId>log4j-amqp</artifactId>
+                    <version>1.0.1</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
+                                    <value>true</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
+                                    <value>false</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>master</id>
             <build>
                 <plugins>

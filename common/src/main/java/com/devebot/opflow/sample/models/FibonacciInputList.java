@@ -7,23 +7,38 @@ import java.util.List;
  *
  * @author drupalex
  */
-public class FibonacciInputList {
-    private final List<FibonacciInput> list = new ArrayList<FibonacciInput>();
+public class FibonacciInputList implements FibonacciIdentifiable {
+
+    private final String requestId;
+    private final List<FibonacciInputItem> list = new ArrayList<>();
 
     public FibonacciInputList() {
+        this(null, null);
     }
 
-    public FibonacciInputList(List<FibonacciInput> init) {
-        list.addAll(init);
+    public FibonacciInputList(List<FibonacciInputItem> init) {
+        this(init, null);
+    }
+    
+    public FibonacciInputList(List<FibonacciInputItem> init, String requestId) {
+        this.requestId = requestId;
+        if (init != null) {
+            list.addAll(init);
+        }
     }
 
-    public List<FibonacciInput> getList() {
-        List<FibonacciInput> copied = new ArrayList<FibonacciInput>();
+    public List<FibonacciInputItem> getList() {
+        List<FibonacciInputItem> copied = new ArrayList<>();
         copied.addAll(list);
         return copied;
     }
     
-    public void add(FibonacciInput packet) {
+    public void add(FibonacciInputItem packet) {
         list.add(packet);
+    }
+
+    @Override
+    public String getRequestId() {
+        return this.requestId;
     }
 }
