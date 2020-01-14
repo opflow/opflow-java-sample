@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-client</artifactId>
-    <version>0.1.27</version>
+    <version>0.1.28</version>
     <packaging>jar</packaging>
     
     <properties>
