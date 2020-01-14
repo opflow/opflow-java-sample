@@ -20,6 +20,7 @@ import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.BlockingHandler;
+import io.undertow.server.handlers.GracefulShutdownHandler;
 import io.undertow.server.handlers.PathTemplateHandler;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
@@ -39,23 +40,30 @@ public class FibonacciClient {
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciClient.class);
     
     public static void main(String[] argv) throws Exception {
-        FibonacciApi api = new FibonacciApi();
-        api.serve();
-        Undertow server = Undertow.builder()
+        final FibonacciApi api = new FibonacciApi();
+        final GracefulShutdownHandler shutdownHander = new GracefulShutdownHandler(api.getPathTemplateHandler());
+        final Undertow server = Undertow.builder()
                 .addHttpListener(8888, "0.0.0.0")
-                .setHandler(api.getPathTemplateHandler())
+                .setHandler(shutdownHander)
                 .build();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
+                System.out.println("[-] The server is shutting down ...");
                 try {
-                    server.stop();
+                    shutdownHander.shutdown();
+                    shutdownHander.awaitShutdown(1000);
+                    System.out.println("[-] shutdownHander has been done");
                     api.close();
+                    System.out.println("[-] Commander has been stopped");
+                    server.stop();
+                    System.out.println("[-] Webserver has been stopped");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
+        api.serve();
         server.start();
         System.out.println("[*] Listening for HTTP on 0.0.0.0:8888");
     }

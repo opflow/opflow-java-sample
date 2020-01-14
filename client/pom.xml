@@ -126,6 +126,10 @@
                             <mainClass>com.devebot.opflow.sample.FibonacciClient</mainClass>
                             <systemProperties>
                                 <property>
+                                    <key>log4j.configuration</key>
+                                    <value>log4j.properties</value>
+                                </property>
+                                <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>
                                     <value>true</value>
                                 </property>

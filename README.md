@@ -79,7 +79,7 @@ opflow.uri=amqp://giong:qwerty@opflow-broker-default
 Compile `opflow-java-sample-server` and start the server (worker):
 
 ```shell
-mvn clean compile exec:java -Pserver
+mvn clean compile exec:java -Pserver -Dfibonacci.calc.delay.min=5 -Dfibonacci.calc.delay.max=10
 ```
 
 ### Run the client
