@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-common</artifactId>
-    <version>0.1.26</version>
+    <version>0.1.27</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -76,6 +76,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <version>3.2.0</version>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
