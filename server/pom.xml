@@ -356,7 +356,7 @@
                                 <configuration>
                                     <archive>
                                         <manifest>
-                                            <mainClass>com.devebot.opflow.example.CommandLine</mainClass>
+                                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
                                         </manifest>
                                     </archive>
                                     <descriptorRefs>
