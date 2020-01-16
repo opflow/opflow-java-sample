@@ -1,5 +1,6 @@
 # opflow-java-example
 
+
 ## Prerequisites
 
 ### Install RabbitMQ on Ubuntu
@@ -27,6 +28,7 @@ Install rabbitmq-server package:
 ```shell
 sudo apt-get install rabbitmq-server
 ```
+
 
 ## Getting started
 
@@ -56,12 +58,22 @@ git clone https://github.com/opflow/opflow-java-sample.git
 cd opflow-java-sample
 ```
 
-### Install the `common` package
+### Install the `fib-api` package
 
-Build and install the `opflow-java-sample-common.jar` and `opflow-java-sample-common-tests.jar` into the local repository:
+Build and install the `opflow-java-sample-fib-api.jar` and `opflow-java-sample-fib-api-tests.jar` into the local repository:
 
 ```
-cd common
+cd fib-api
+mvn clean install
+cd ../
+```
+
+### Install the `fib-impl` package
+
+Build and install the `opflow-java-sample-fib-impl.jar` into the local repository:
+
+```
+cd fib-impl
 mvn clean install
 cd ../
 ```
@@ -110,51 +122,6 @@ Calculate the fibonacci of a number with url `http://localhost:8888/fibonacci/29
 
 ![Calc](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/browser-get-calc.png)
 
-## Old version examples
-
-Clone source code from `github`:
-
-```shell
-git clone https://github.com/opflow/opflow-java-sample.git
-cd opflow-java-sample
-```
-
-### Install API/common
-
-Install `opflow-java-sample-common.jar` and `opflow-java-sample-common-tests.jar`:
-
-```
-cd common
-mvn clean install
-cd ../
-```
-
-### Install server
-
-Compile `opflow-java-sample-server`:
-
-```shell
-cd server
-mvn compile
-```
-
-To run worker, use the following command:
-
-```shell
-mvn compile exec:java -Pworker
-```
-
-And master:
-
-```shell
-mvn compile exec:java -Pmaster
-```
-
-And Pub/Sub:
-
-```shell
-mvn compile exec:java -Ppubsub
-```
 
 ## Run TDD test
 
@@ -170,6 +137,7 @@ Invokes maven to run unit tests:
 mvn test
 ```
 
+
 ## Run BDD test
 
 Compiles source code and installs dependencies:
@@ -183,6 +151,7 @@ Invokes maven to run integration tests:
 ```shell
 mvn verify
 ```
+
 
 ## Packing
 
