@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
-    <artifactId>opflow-java-sample-server</artifactId>
+    <artifactId>opflow-java-sample-fib-impl</artifactId>
     <version>0.1.28</version>
     <packaging>jar</packaging>
     
@@ -45,8 +45,42 @@
         </dependency>
         <dependency>
             <groupId>com.devebot.opflow</groupId>
-            <artifactId>opflow-java-sample-fib-impl</artifactId>
+            <artifactId>opflow-java-sample-fib-api</artifactId>
             <version>${opflow-sample.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.devebot.opflow</groupId>
+            <artifactId>opflow-java-sample-fib-api</artifactId>
+            <version>${opflow-sample.version}</version>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.72</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jbehave</groupId>
+            <artifactId>jbehave-core</artifactId>
+            <version>3.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     
@@ -61,82 +95,69 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <skipTests>false</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*Stories.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jbehave</groupId>
+                <artifactId>jbehave-maven-plugin</artifactId>
+                <version>4.5.1</version>
+                <executions>
+                    <execution>
+                        <id>run-stories-as-embeddables</id>
+                        <phase>integration-test</phase>
+                        <configuration>
+                            <includes>
+                                <include>**/*Stories.java</include>
+                            </includes>
+                            <metaFilters>
+                                <metaFilter>+author *</metaFilter>
+                                <metaFilter>-skip</metaFilter>
+                            </metaFilters>
+                            <systemProperties>
+                                <property>
+                                    <name>java.awt.headless</name>
+                                    <value>true</value>
+                                </property>
+                            </systemProperties>
+                            <ignoreFailureInStories>false</ignoreFailureInStories>
+                            <ignoreFailureInView>false</ignoreFailureInView>
+                            <generateViewAfterStories>false</generateViewAfterStories>
+                        </configuration>
+                        <goals>
+                            <goal>run-stories-as-embeddables</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     
     <profiles>
-        <profile>
-            <id>server</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <version>1.7.21</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.6.0</version>
-                        <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
-                            <systemProperties>
-                                <property>
-                                    <key>log4j.configuration</key>
-                                    <value>log4j.properties</value>
-                                </property>
-                                <property>
-                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
-                                    <value>true</value>
-                                </property>
-                                <property>
-                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
-                                    <value>false</value>
-                                </property>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>server-log4j-amqp</id>
-            <dependencies>
-                <dependency>
-                    <groupId>com.devebot.opflow</groupId>
-                    <artifactId>log4j-amqp</artifactId>
-                    <version>1.0.1</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.6.0</version>
-                        <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
-                            <systemProperties>
-                                <property>
-                                    <key>log4j.configuration</key>
-                                    <value>log4j-amqp.properties</value>
-                                </property>
-                                <property>
-                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
-                                    <value>true</value>
-                                </property>
-                                <property>
-                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
-                                    <value>false</value>
-                                </property>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>git</id>
             <activation>
@@ -181,36 +202,6 @@
                                 <dirty>-dirty</dirty>
                             </gitDescribe>
                         </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>bundle</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration>
-                                    <archive>
-                                        <manifest>
-                                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
-                                        </manifest>
-                                    </archive>
-                                    <descriptorRefs>
-                                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                                    </descriptorRefs>
-                                    <appendAssemblyId>false</appendAssemblyId>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>

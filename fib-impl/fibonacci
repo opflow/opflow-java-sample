@@ -1,0 +1,9 @@
+#!/bin/bash
+
+java -Dlog4j.configuration=file:$HOME/log4j.properties \
+     -Dopflow.configuration=file:$HOME/server.properties \
+     -jar target/opflow-java-sample-server.jar $@
+
+#java -Dlog4j.configuration=file:$HOME/projects/opflow/opflow-java-sample/server/src/main/resources/log4j.properties \
+#     -Dopflow.configuration=file:$HOME/projects/opflow/opflow-java-sample/server/src/main/resources/server.properties \
+#     -jar target/opflow-java-sample-server.jar $@
