@@ -7,7 +7,9 @@ RUN mkdir /app/config
 RUN mkdir /app/logs
 RUN chmod 777 /app/logs
 
-COPY target/opflow-java-sample-client.jar /app/
+ARG JAR_FILE_NAME
+
+COPY target/${JAR_FILE_NAME} /app/
 
 COPY src/main/resources/client.properties /app/config/
 COPY src/main/resources/log4j-amqp.properties /app/config/

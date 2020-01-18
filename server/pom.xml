@@ -224,17 +224,18 @@
                         <executions>
                             <execution>
                                 <id>default</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
                             </execution>
                         </executions>
                         <configuration>
-                            <repository>opwire/opflow-java-sample-server</repository>
+                            <repository>opwire/${project.build.finalName}</repository>
                             <tag>${project.version}</tag>
                             <buildArgs>
-                                <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                                <TARGET_DIR>${project.build.finalName}.jar</TARGET_DIR>
+                                <JAR_FILE_NAME>${project.build.finalName}.jar</JAR_FILE_NAME>
+                                <TARGET_DIR>${project.build.directory}</TARGET_DIR>
                             </buildArgs>
                         </configuration>
                     </plugin>
