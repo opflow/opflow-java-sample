@@ -77,6 +77,11 @@
     <profiles>
         <profile>
             <id>client</id>
+            <activation>
+                <property>
+                    <name>!profile.log4j.skip</name>
+                </property>
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.slf4j</groupId>
@@ -265,6 +270,27 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>dockerfile-maven-plugin</artifactId>
+                        <version>1.4.13</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <repository>opwire/opflow-java-sample-client</repository>
+                            <tag>${project.version}</tag>
+                            <buildArgs>
+                                <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                                <TARGET_DIR>${project.build.finalName}.jar</TARGET_DIR>
+                            </buildArgs>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

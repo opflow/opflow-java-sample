@@ -11,7 +11,7 @@ import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
  */
 public class FibonacciServer {
     public static void main(String[] argv) throws Exception {
-        System.out.println("FibonacciServer start: ");
+        System.out.println("[+] FibonacciServer start:");
         final OpflowServerlet server = OpflowBuilder.createServerlet("server.properties");
         server.instantiateType(AlertSenderImpl.class);
         server.instantiateType(FibonacciCalculatorImpl.class);

@@ -7,9 +7,9 @@ RUN mkdir /app/config
 RUN mkdir /app/logs
 RUN chmod 777 /app/logs
 
-COPY target/opflow-java-sample-client.jar /app/
+COPY target/opflow-java-sample-server.jar /app/
 
-COPY src/main/resources/client.properties /app/config/
+COPY src/main/resources/server.properties /app/config/
 COPY src/main/resources/log4j-amqp.properties /app/config/
 COPY src/main/resources/log4j.properties /app/config/
 
@@ -18,7 +18,6 @@ RUN chmod +x /app/docker-entrypoint.sh
 
 USER 1000
 
-EXPOSE 8888
-EXPOSE 8989
+EXPOSE 9450-9459
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
