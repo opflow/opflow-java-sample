@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
-    <artifactId>opflow-java-sample-client</artifactId>
+    <artifactId>opflow-java-sample-master</artifactId>
     <version>0.1.28</version>
     <packaging>jar</packaging>
     
@@ -76,7 +76,7 @@
     
     <profiles>
         <profile>
-            <id>client</id>
+            <id>master</id>
             <activation>
                 <property>
                     <name>!profile.log4j.skip</name>
@@ -96,7 +96,7 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>1.6.0</version>
                         <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciClient</mainClass>
+                            <mainClass>com.devebot.opflow.sample.FibonacciMaster</mainClass>
                             <systemProperties>
                                 <property>
                                     <key>log4j.configuration</key>
@@ -121,7 +121,7 @@
             </build>
         </profile>
         <profile>
-            <id>client-log4j-amqp</id>
+            <id>master-log4j-amqp</id>
             <dependencies>
                 <dependency>
                     <groupId>com.devebot.opflow</groupId>
@@ -136,7 +136,7 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>1.6.0</version>
                         <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciClient</mainClass>
+                            <mainClass>com.devebot.opflow.sample.FibonacciMaster</mainClass>
                             <systemProperties>
                                 <property>
                                     <key>log4j.configuration</key>
@@ -161,7 +161,7 @@
             </build>
         </profile>
         <profile>
-            <id>client-slf4j-amqp</id>
+            <id>master-slf4j-amqp</id>
             <dependencies>
                 <dependency>
                     <groupId>com.devebot.opflow</groupId>
@@ -176,7 +176,7 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>1.6.0</version>
                         <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciClient</mainClass>
+                            <mainClass>com.devebot.opflow.sample.FibonacciMaster</mainClass>
                             <systemProperties>
                                 <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>
@@ -260,7 +260,7 @@
                                 <configuration>
                                     <archive>
                                         <manifest>
-                                            <mainClass>com.devebot.opflow.sample.FibonacciClient</mainClass>
+                                            <mainClass>com.devebot.opflow.sample.FibonacciMaster</mainClass>
                                         </manifest>
                                     </archive>
                                     <descriptorRefs>

@@ -2,7 +2,6 @@ package com.devebot.opflow.sample.bdd.steps;
 
 import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowBuilder;
-import com.devebot.opflow.OpflowJsontool;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
@@ -10,6 +9,7 @@ import com.devebot.opflow.sample.models.FibonacciInputItem;
 import com.devebot.opflow.sample.models.FibonacciInputList;
 import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.models.FibonacciOutputList;
+import com.devebot.opflow.supports.OpflowJsonTool;
 import java.util.HashMap;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
@@ -26,11 +26,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class FibonacciClientSteps {
-    private final static Logger LOG = LoggerFactory.getLogger(FibonacciClientSteps.class);
-    private final Map<String, OpflowCommander> commanders = new HashMap<String, OpflowCommander>();
+public class FibonacciMasterSteps {
+    private final static Logger LOG = LoggerFactory.getLogger(FibonacciMasterSteps.class);
+    private final Map<String, OpflowCommander> commanders = new HashMap<>();
     
-    private final Map<String, Map<String, Object>> context = new HashMap<String, Map<String, Object>>();
+    private final Map<String, Map<String, Object>> context = new HashMap<>();
     protected Map<String, Object> getContext(String contextName) {
         if (!context.containsKey(contextName)) {
             context.put(contextName, new HashMap<String, Object>());
@@ -67,7 +67,7 @@ public class FibonacciClientSteps {
             @Named("number") final int number) throws OpflowBootstrapException {
         FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
         FibonacciOutputItem result = calculator.calc(new FibonacciInputItem(number));
-        if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutput: " + OpflowJsontool.toString(result));
+        if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutput: " + OpflowJsonTool.toString(result));
         getContext(commanderName).put("output", result);
     }
     
@@ -81,7 +81,7 @@ public class FibonacciClientSteps {
             list.add(new FibonacciInputItem(integer));
         }
         FibonacciOutputList results = calculator.calc(list);
-        if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutputList: " + OpflowJsontool.toString(results));
+        if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutputList: " + OpflowJsonTool.toString(results));
         getContext(commanderName).put("outputList", results);
     }
     

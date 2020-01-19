@@ -2,8 +2,8 @@ Simple Serverlet story
 
 Lifecycle:
 Before:
-Given a Commander named 'commander1' with properties file: 'client-test.properties'
-Given a Serverlet named 'serverlet1' with properties file: 'server-test.properties'
+Given a Commander named 'commander1' with properties file: 'master-test.properties'
+Given a Serverlet named 'serverlet1' with properties file: 'worker-test.properties'
 After:
 Outcome: ANY
 When I close Commander named 'commander1'

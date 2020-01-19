@@ -2,7 +2,7 @@ Simple Serverlet story
 
 Lifecycle:
 Before:
-Given a Commander named 'commander1' with properties file: 'client.properties'
+Given a Commander named 'commander1' with properties file: 'master.properties'
 After:
 Outcome: ANY
 When I close Commander named 'commander1'

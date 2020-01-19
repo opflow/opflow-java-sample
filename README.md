@@ -80,34 +80,34 @@ cd ../
 
 ### Run the workers
 
-Open a new `terminal` and change to `opflow-java-sample/server` directory.
-Update the rabbitmq connection parameters in `src/main/resources/server.properties`:
+Open a new `terminal` and change to `opflow-java-sample/worker` directory.
+Update the rabbitmq connection parameters in `src/main/resources/worker.properties`:
 
 ```properties
 opflow.uri=amqp://giong:qwerty@opflow-broker-default
 # ...
 ```
 
-Compile `opflow-java-sample-server` and start the server (worker):
+Compile `opflow-java-sample-worker` and start the worker (worker):
 
 ```shell
 mvn clean compile exec:java -Pserver -Dfibonacci.calc.delay.min=5 -Dfibonacci.calc.delay.max=10
 ```
 
-### Run the client
+### Run the master
 
-Open a new `terminal` and change to `opflow-java-sample/client` directory.
-Update the rabbitmq connection parameters in `src/main/resources/client.properties`:
+Open a new `terminal` and change to `opflow-java-sample/master` directory.
+Update the rabbitmq connection parameters in `src/main/resources/master.properties`:
 
 ```properties
 opflow.uri=amqp://giong:qwerty@opflow-broker-default
 # ...
 ```
 
-Compile `opflow-java-sample-client` and start the web service on client:
+Compile `opflow-java-sample-master` and start the web service on master:
 
 ```shell
-mvn clean compile exec:java -Pclient
+mvn clean compile exec:java -Pmaster
 ```
 
 ![Netbeans](https://raw.github.com/opflow/opflow-java-sample/master/docs/assets/images/opflow-netbeans-terminal.png)
@@ -169,21 +169,21 @@ cp src/main/resources/*.properties ~/
 
 Opens and edit properties files if necessary to change.
 
-Execute server:
+Execute worker:
 
 ```shell
-bash fibonacci --process server
+bash fibonacci --process worker
 ```
 
 Make a request Fibonacci(38):
 
 
 ```shell
-bash fibonacci -p client -r request -n 38
+bash fibonacci -p master -r request -n 38
 ```
 
 Calculate Fibonacci for 1000 random numbers in a range [20, 40]:
 
 ```shell
-bash fibonacci -p client -r random --total 1000 --range 20,40
+bash fibonacci -p master -r random --total 1000 --range 20,40
 ```

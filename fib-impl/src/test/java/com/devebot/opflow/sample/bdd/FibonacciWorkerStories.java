@@ -1,7 +1,7 @@
 package com.devebot.opflow.sample.bdd;
 
-import com.devebot.opflow.sample.bdd.steps.FibonacciClientSteps;
-import com.devebot.opflow.sample.bdd.steps.FibonacciServerSteps;
+import com.devebot.opflow.sample.bdd.steps.FibonacciMasterSteps;
+import com.devebot.opflow.sample.bdd.steps.FibonacciWorkerSteps;
 import java.util.Arrays;
 import java.util.List;
 import org.jbehave.core.io.CodeLocations;
@@ -13,18 +13,18 @@ import org.jbehave.core.steps.InjectableStepsFactory;
  *
  * @author drupalex
  */
-public class FibonacciServerStories extends FibonacciEmbedder {
+public class FibonacciWorkerStories extends FibonacciEmbedder {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
         return new InstanceStepsFactory(configuration(),
-                new FibonacciClientSteps(),
-                new FibonacciServerSteps());
+                new FibonacciMasterSteps(),
+                new FibonacciWorkerSteps());
     }
      
     @Override
     protected List<String> storyPaths() {
         String codeLocation = CodeLocations.codeLocationFromClass(this.getClass()).getFile();
-        return new StoryFinder().findPaths(codeLocation, Arrays.asList("**/server*.story"), Arrays.asList(""), "file:" + codeLocation);
+        return new StoryFinder().findPaths(codeLocation, Arrays.asList("**/worker*.story"), Arrays.asList(""), "file:" + codeLocation);
     }
 }

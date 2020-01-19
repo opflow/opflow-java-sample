@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class FibonacciServerSteps {
-    private final static Logger LOG = LoggerFactory.getLogger(FibonacciServerSteps.class);
+public class FibonacciWorkerSteps {
+    private final static Logger LOG = LoggerFactory.getLogger(FibonacciWorkerSteps.class);
     private final Map<String, OpflowServerlet> serverlets = new HashMap<>();
     
     @BeforeScenario

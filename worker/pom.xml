@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
-    <artifactId>opflow-java-sample-server</artifactId>
+    <artifactId>opflow-java-sample-worker</artifactId>
     <version>0.1.28</version>
     <packaging>jar</packaging>
     
@@ -66,7 +66,7 @@
     
     <profiles>
         <profile>
-            <id>server</id>
+            <id>worker</id>
             <activation>
                 <property>
                     <name>!profile.log4j.skip</name>
@@ -86,7 +86,7 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>1.6.0</version>
                         <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
+                            <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
                             <systemProperties>
                                 <property>
                                     <key>log4j.configuration</key>
@@ -107,7 +107,7 @@
             </build>
         </profile>
         <profile>
-            <id>server-log4j-amqp</id>
+            <id>worker-log4j-amqp</id>
             <dependencies>
                 <dependency>
                     <groupId>com.devebot.opflow</groupId>
@@ -122,7 +122,7 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>1.6.0</version>
                         <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
+                            <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
                             <systemProperties>
                                 <property>
                                     <key>log4j.configuration</key>
@@ -206,7 +206,7 @@
                                 <configuration>
                                     <archive>
                                         <manifest>
-                                            <mainClass>com.devebot.opflow.sample.FibonacciServer</mainClass>
+                                            <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
                                         </manifest>
                                     </archive>
                                     <descriptorRefs>

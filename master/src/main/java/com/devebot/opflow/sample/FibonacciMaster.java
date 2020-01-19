@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class FibonacciClient {
+public class FibonacciMaster {
     
-    private final static Logger LOG = LoggerFactory.getLogger(FibonacciClient.class);
+    private final static Logger LOG = LoggerFactory.getLogger(FibonacciMaster.class);
     
     public static void main(String[] argv) throws Exception {
         final FibonacciApi api = new FibonacciApi();
@@ -77,7 +77,7 @@ public class FibonacciClient {
         private final RandomHandler randomHandler;
         
         FibonacciApi() throws OpflowBootstrapException {
-            this.commander = OpflowBuilder.createCommander("client.properties");
+            this.commander = OpflowBuilder.createCommander("master.properties");
             this.alertSender = commander.registerType(AlertSender.class);
             this.alertHandler = new AlertHandler(this.alertSender);
             this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
