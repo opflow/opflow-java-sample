@@ -22,4 +22,4 @@ USER 1000
 
 EXPOSE 9450-9459
 
-ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD [ "/app/docker-entrypoint.sh" ]

@@ -24,4 +24,4 @@ EXPOSE 8888
 EXPOSE 8989-8999
 EXPOSE 9450-9459
 
-ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD [ "/app/docker-entrypoint.sh" ]
