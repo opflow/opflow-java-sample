@@ -49,7 +49,7 @@ Compile and install the package:
 mvn clean install
 ```
 
-### Get the example source code
+### Clone the example source code
 
 Clone source code from `github`:
 
@@ -134,7 +134,7 @@ mvn compile
 Invokes maven to run unit tests:
 
 ```shell
-mvn test
+mvn clean test
 ```
 
 
@@ -149,7 +149,7 @@ mvn compile
 Invokes maven to run integration tests:
 
 ```shell
-mvn verify
+mvn clean verify
 ```
 
 
