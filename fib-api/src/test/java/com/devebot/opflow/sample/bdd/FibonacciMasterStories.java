@@ -19,7 +19,7 @@ public class FibonacciMasterStories extends FibonacciEmbedder {
         return new InstanceStepsFactory(configuration(),
                 new FibonacciMasterSteps());
     }
-     
+
     @Override
     protected List<String> storyPaths() {
         String codeLocation = CodeLocations.codeLocationFromClass(this.getClass()).getFile();
