@@ -12,7 +12,7 @@ ARG JAR_FILE_NAME
 COPY target/${JAR_FILE_NAME} /app/
 
 COPY src/main/resources/master.properties /app/config/
-COPY src/main/resources/log4j-amqp.properties /app/config/
+COPY src/main/resources/log4j-file.properties /app/config/
 COPY src/main/resources/log4j.properties /app/config/
 
 COPY src/misc/docker-entrypoint.sh /app/

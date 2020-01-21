@@ -84,9 +84,9 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <version>1.7.21</version>
+                    <groupId>com.devebot.opflow</groupId>
+                    <artifactId>log4j-amqp</artifactId>
+                    <version>1.1.0</version>
                 </dependency>
             </dependencies>
             <build>
@@ -98,10 +98,6 @@
                         <configuration>
                             <mainClass>com.devebot.opflow.sample.FibonacciMaster</mainClass>
                             <systemProperties>
-                                <property>
-                                    <key>log4j.configuration</key>
-                                    <value>log4j.properties</value>
-                                </property>
                                 <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>
                                     <value>true</value>
@@ -121,12 +117,12 @@
             </build>
         </profile>
         <profile>
-            <id>master-log4j-amqp</id>
+            <id>master-log4j-file</id>
             <dependencies>
                 <dependency>
-                    <groupId>com.devebot.opflow</groupId>
-                    <artifactId>log4j-amqp</artifactId>
-                    <version>1.0.1</version>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <version>1.7.21</version>
                 </dependency>
             </dependencies>
             <build>
@@ -140,7 +136,7 @@
                             <systemProperties>
                                 <property>
                                     <key>log4j.configuration</key>
-                                    <value>log4j-amqp.properties</value>
+                                    <value>log4j-file.properties</value>
                                 </property>
                                 <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>

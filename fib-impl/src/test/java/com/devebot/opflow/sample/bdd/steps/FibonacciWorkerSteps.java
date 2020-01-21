@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FibonacciWorkerSteps {
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciWorkerSteps.class);
-    private final Map<String, OpflowServerlet> serverlets = new HashMap<>();
+    private final static Map<String, OpflowServerlet> serverlets = new HashMap<>();
     
     @BeforeScenario
     public void beforeEachScenario() {

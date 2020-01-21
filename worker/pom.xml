@@ -74,6 +74,38 @@
             </activation>
             <dependencies>
                 <dependency>
+                    <groupId>com.devebot.opflow</groupId>
+                    <artifactId>log4j-amqp</artifactId>
+                    <version>1.1.0</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
+                            <systemProperties>
+                                <property>
+                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
+                                    <value>true</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
+                                    <value>false</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>worker-log4j-file</id>
+            <dependencies>
+                <dependency>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                     <version>1.7.21</version>
@@ -90,43 +122,7 @@
                             <systemProperties>
                                 <property>
                                     <key>log4j.configuration</key>
-                                    <value>log4j.properties</value>
-                                </property>
-                                <property>
-                                    <key>OPFLOW_TEMPLATE_APPLIED</key>
-                                    <value>true</value>
-                                </property>
-                                <property>
-                                    <key>OPFLOW_TAGS_EMBEDDABLE</key>
-                                    <value>false</value>
-                                </property>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>worker-log4j-amqp</id>
-            <dependencies>
-                <dependency>
-                    <groupId>com.devebot.opflow</groupId>
-                    <artifactId>log4j-amqp</artifactId>
-                    <version>1.0.1</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.6.0</version>
-                        <configuration>
-                            <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
-                            <systemProperties>
-                                <property>
-                                    <key>log4j.configuration</key>
-                                    <value>log4j-amqp.properties</value>
+                                    <value>log4j-file.properties</value>
                                 </property>
                                 <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>
