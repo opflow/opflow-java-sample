@@ -3,7 +3,7 @@
 
 opflow:
     # Common parameters
-    uri: amqp://giong:qwerty@opflow-broker-default
+    uri: amqp://giong:qwerty@opflow-rabbitmq-server
     applicationId: FibonacciGenerator
 
     # Opflow RPC Master
