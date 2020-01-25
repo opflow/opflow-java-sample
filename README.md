@@ -115,7 +115,7 @@ docker run -it --rm \
 
 ### Build `opflow-core` from the latest source code
 
-Clone the `master` branch from github:
+Clone the `opflow-core` source code from github:
 
 ```shell
 git clone https://github.com/opflow/opflow-java.git
@@ -163,7 +163,7 @@ Open a new `terminal` and change to `opflow-java-sample/worker` directory.
 Update the rabbitmq connection parameters in `src/main/resources/worker.properties`:
 
 ```properties
-opflow.uri=amqp://giong:qwerty@opflow-rabbitmq-server
+opflow.uri=amqp://opuser:qwerty@opflow-rabbitmq-server/opflow
 # ...
 ```
 
@@ -179,7 +179,7 @@ Open a new `terminal` and change to `opflow-java-sample/master` directory.
 Update the rabbitmq connection parameters in `src/main/resources/master.properties`:
 
 ```properties
-opflow.uri=amqp://giong:qwerty@opflow-rabbitmq-server
+opflow.uri=amqp://opuser:qwerty@opflow-rabbitmq-server/opflow
 # ...
 ```
 
