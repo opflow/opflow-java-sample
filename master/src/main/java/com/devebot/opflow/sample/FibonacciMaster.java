@@ -35,13 +35,46 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class FibonacciMaster {
+public class FibonacciMaster implements AutoCloseable {
     
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciMaster.class);
     
+    private final OpflowCommander commander;
+    private final AlertSender alertSender;
+    private final AlertHandler alertHandler;
+    private final FibonacciCalculator calculator;
+    private final CalcHandler calcHandler;
+    private final RandomHandler randomHandler;
+
+    FibonacciMaster() throws OpflowBootstrapException {
+        this.commander = OpflowBuilder.createCommander("master.properties");
+        this.alertSender = commander.registerType(AlertSender.class);
+        this.alertHandler = new AlertHandler(this.alertSender);
+        this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
+        this.calcHandler = new CalcHandler(this.calculator);
+        this.randomHandler = new RandomHandler(this.calculator);
+    }
+
+    public PathTemplateHandler getPathTemplateHandler() {
+        PathTemplateHandler ptHandler = Handlers.pathTemplate()
+                .add("/alert", new BlockingHandler(this.alertHandler))
+                .add("/fibonacci/{number}", this.calcHandler)
+                .add("/random/{total}", this.randomHandler);
+        return ptHandler;
+    }
+
+    public void serve() {
+        this.commander.serve();
+    }
+
+    @Override
+    public void close() throws Exception {
+        commander.close();
+    }
+    
     public static void main(String[] argv) throws Exception {
-        final FibonacciApi api = new FibonacciApi();
-        final GracefulShutdownHandler shutdownHander = new GracefulShutdownHandler(api.getPathTemplateHandler());
+        final FibonacciMaster master = new FibonacciMaster();
+        final GracefulShutdownHandler shutdownHander = new GracefulShutdownHandler(master.getPathTemplateHandler());
         final Undertow server = Undertow.builder()
                 .addHttpListener(8888, "0.0.0.0")
                 .setHandler(shutdownHander)
@@ -54,7 +87,7 @@ public class FibonacciMaster {
                     shutdownHander.shutdown();
                     shutdownHander.awaitShutdown(1000);
                     System.out.println("[-] shutdownHander has been done");
-                    api.close();
+                    master.close();
                     System.out.println("[-] Commander has been stopped");
                     server.stop();
                     System.out.println("[-] Webserver has been stopped");
@@ -63,44 +96,9 @@ public class FibonacciMaster {
                 }
             }
         });
-        api.serve();
+        master.serve();
         server.start();
         System.out.println("[*] Listening for HTTP on 0.0.0.0:8888");
-    }
-    
-    static class FibonacciApi implements AutoCloseable {
-        private final OpflowCommander commander;
-        private final AlertSender alertSender;
-        private final AlertHandler alertHandler;
-        private final FibonacciCalculator calculator;
-        private final CalcHandler calcHandler;
-        private final RandomHandler randomHandler;
-        
-        FibonacciApi() throws OpflowBootstrapException {
-            this.commander = OpflowBuilder.createCommander("master.properties");
-            this.alertSender = commander.registerType(AlertSender.class);
-            this.alertHandler = new AlertHandler(this.alertSender);
-            this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
-            this.calcHandler = new CalcHandler(this.calculator);
-            this.randomHandler = new RandomHandler(this.calculator);
-        }
-        
-        public PathTemplateHandler getPathTemplateHandler() {
-            PathTemplateHandler ptHandler = Handlers.pathTemplate()
-                    .add("/alert", new BlockingHandler(this.alertHandler))
-                    .add("/fibonacci/{number}", this.calcHandler)
-                    .add("/random/{total}", this.randomHandler);
-            return ptHandler;
-        }
-        
-        public void serve() {
-            this.commander.serve();
-        }
-        
-        @Override
-        public void close() throws Exception {
-            commander.close();
-        }
     }
     
     static class AlertHandler implements HttpHandler {
