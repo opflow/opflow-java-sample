@@ -10,7 +10,7 @@
 
 ### Install Docker
 
-Install the Docker software by following the [installation instructions on the Docker website](https://www.docker.com/community-edition).
+Install the Docker software by following the [installation instructions on the Docker website](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-engine---community).
 
 
 ### Create the private network
