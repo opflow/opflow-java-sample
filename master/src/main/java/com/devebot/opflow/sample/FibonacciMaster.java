@@ -4,6 +4,7 @@ import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
+import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.exception.OpflowRequestSuspendException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
 import com.devebot.opflow.exception.OpflowWorkerNotFoundException;
@@ -73,32 +74,37 @@ public class FibonacciMaster implements AutoCloseable {
     }
     
     public static void main(String[] argv) throws Exception {
-        final FibonacciMaster master = new FibonacciMaster();
-        final GracefulShutdownHandler shutdownHander = new GracefulShutdownHandler(master.getPathTemplateHandler());
-        final Undertow server = Undertow.builder()
-                .addHttpListener(8888, "0.0.0.0")
-                .setHandler(shutdownHander)
-                .build();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                System.out.println("[-] The server is shutting down ...");
-                try {
-                    shutdownHander.shutdown();
-                    shutdownHander.awaitShutdown(1000);
-                    System.out.println("[-] shutdownHander has been done");
-                    master.close();
-                    System.out.println("[-] Commander has been stopped");
-                    server.stop();
-                    System.out.println("[-] Webserver has been stopped");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+        try {
+            final FibonacciMaster master = new FibonacciMaster();
+                    final GracefulShutdownHandler shutdownHander = new GracefulShutdownHandler(master.getPathTemplateHandler());
+            final Undertow server = Undertow.builder()
+                    .addHttpListener(8888, "0.0.0.0")
+                    .setHandler(shutdownHander)
+                    .build();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    System.out.println("[-] The server is shutting down ...");
+                    try {
+                        shutdownHander.shutdown();
+                        shutdownHander.awaitShutdown(1000);
+                        System.out.println("[-] shutdownHander has been done");
+                        master.close();
+                        System.out.println("[-] Commander has been stopped");
+                        server.stop();
+                        System.out.println("[-] Webserver has been stopped");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            }
-        });
-        master.serve();
-        server.start();
-        System.out.println("[*] Listening for HTTP on 0.0.0.0:8888");
+            });
+            master.serve();
+            server.start();
+            System.out.println("[*] Listening for HTTP on 0.0.0.0:8888");
+        }
+        catch (OpflowConnectionException e) {
+            System.err.println("[*] Invalid connection parameters or the RabbitMQ Server not available");
+        }
     }
     
     static class AlertHandler implements HttpHandler {

@@ -3,12 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-master</artifactId>
-    <version>0.1.28</version>
+    <version>0.1.29</version>
     <packaging>jar</packaging>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <final.version>1.0.0</final.version>
         <artifact.name>${project.artifactId}</artifact.name>
         <java.version>1.8</java.version>
         <opflow.version>${project.version}</opflow.version>
