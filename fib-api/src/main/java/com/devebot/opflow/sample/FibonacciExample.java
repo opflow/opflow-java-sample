@@ -5,9 +5,10 @@ import com.devebot.opflow.sample.models.FibonacciInputList;
 import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.models.FibonacciOutputList;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
+import com.devebot.opflow.sample.utils.CommonUtil;
+import com.devebot.opflow.sample.utils.Randomizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  *
@@ -44,12 +45,6 @@ public class FibonacciExample {
         }
     }
     
-    private static final Random RANDOM = new Random();
-
-    private static int random(int min, int max) {
-        return RANDOM.nextInt(max + 1 - min) + min;
-    }
-    
     private static class FibonacciGenerator {
         private int n;
         private int c = 0;
@@ -73,12 +68,7 @@ public class FibonacciExample {
 
         public boolean next() {
             if (0 <= this.m && this.m < this.M) {
-                int d = random(this.m, this.M);
-                if (d > 0) {
-                    try {
-                        Thread.sleep(d);
-                    } catch(InterruptedException ie) {}
-                }
+                CommonUtil.sleep(Randomizer.random(this.m, this.M));
             }
             if (c >= n) return false;
             if (++c < 2) {

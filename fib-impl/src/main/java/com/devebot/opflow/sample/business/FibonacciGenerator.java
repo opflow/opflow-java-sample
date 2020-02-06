@@ -1,7 +1,8 @@
 package com.devebot.opflow.sample.business;
 
 import com.devebot.opflow.sample.models.FibonacciOutputItem;
-import java.util.Random;
+import com.devebot.opflow.sample.utils.CommonUtil;
+import com.devebot.opflow.sample.utils.Randomizer;
 
 /**
  *
@@ -36,12 +37,7 @@ public class FibonacciGenerator {
     
     public boolean next() {
         if (0 <= this.m && this.m < this.M) {
-            int d = random(this.m, this.M);
-            if (d > 0) {
-                try {
-                    Thread.sleep(d);
-                } catch(InterruptedException ie) {}
-            }
+            CommonUtil.sleep(Randomizer.random(this.m, this.M));
         }
         if (c >= n) return false;
         if (++c < 2) {
@@ -59,11 +55,5 @@ public class FibonacciGenerator {
     public FibonacciOutputItem finish() {
         while(next()) {}
         return result();
-    }
-    
-    private static final Random RANDOM = new Random();
-    
-    private static int random(int min, int max) {
-        return RANDOM.nextInt(max + 1 - min) + min;
     }
 }
