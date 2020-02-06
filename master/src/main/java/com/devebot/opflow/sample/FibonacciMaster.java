@@ -2,6 +2,7 @@ package com.devebot.opflow.sample;
 
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
+import com.devebot.opflow.OpflowUUID;
 import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
@@ -14,6 +15,7 @@ import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.services.AlertSender;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
+import com.devebot.opflow.sample.utils.CommonUtil;
 import com.devebot.opflow.sample.utils.Randomizer;
 import com.devebot.opflow.supports.OpflowJsonTool;
 import io.undertow.Handlers;
@@ -208,6 +210,12 @@ public class FibonacciMaster implements AutoCloseable {
         
         @Override
         public void handleRequest(HttpServerExchange exchange) throws Exception {
+            // get the requestId
+            HeaderMap headers = exchange.getRequestHeaders();
+            String reqId = headers.getFirst("X-Request-Id");
+            if (reqId == null) {
+                reqId = OpflowUUID.getBase64ID();
+            }
             // get the number
             PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
             String totalStr = pathMatch.getParameters().get("total");
@@ -216,13 +224,16 @@ public class FibonacciMaster implements AutoCloseable {
                 List<Object> list = new ArrayList<>();
                 Integer total = Integer.parseInt(totalStr);
                 if (total > 0) {
+                    int digit = CommonUtil.countDigit(total);
+                    String pattern = "/%0" + digit + "d";
                     for (int i = 0; i<total; i++) {
+                        String requestId = reqId + String.format(pattern, i);
                         int n = Randomizer.random(2, 45);
                         try {
                             if (n % 2 == 0) {
                                 list.add(this.calculator.calc(n));
                             } else {
-                                list.add(this.calculator.calc(new FibonacciInputItem(n)));
+                                list.add(this.calculator.calc(new FibonacciInputItem(n, requestId)));
                             }
                         } catch (Exception e) {
                             list.add(OpflowUtil.buildOrderedMap()
