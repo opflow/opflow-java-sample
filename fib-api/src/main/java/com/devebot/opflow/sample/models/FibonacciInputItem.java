@@ -1,5 +1,7 @@
 package com.devebot.opflow.sample.models;
 
+import com.devebot.opflow.OpflowUUID;
+
 /**
  *
  * @author drupalex
@@ -16,7 +18,7 @@ public class FibonacciInputItem implements FibonacciIdentifiable {
     public FibonacciInputItem(int number, String requestId) {
         this.number = number;
         if (requestId == null) {
-            this.requestId = null;
+            this.requestId = OpflowUUID.getBase64ID();
         } else {
             this.requestId = requestId;
         }
