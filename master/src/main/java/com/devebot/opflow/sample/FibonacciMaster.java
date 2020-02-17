@@ -31,6 +31,11 @@ import io.undertow.util.PathTemplateMatch;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -210,6 +215,7 @@ public class FibonacciMaster implements AutoCloseable {
         
         @Override
         public void handleRequest(HttpServerExchange exchange) throws Exception {
+            ExecutorService executor = null;
             // get the requestId
             HeaderMap headers = exchange.getRequestHeaders();
             String reqId = headers.getFirst("X-Request-Id");
@@ -221,27 +227,39 @@ public class FibonacciMaster implements AutoCloseable {
             String totalStr = pathMatch.getParameters().get("total");
             System.out.println("[+] Make a RPC call with number: " + totalStr);
             try {
+                executor = Executors.newFixedThreadPool(200);
+
                 List<Object> list = new ArrayList<>();
                 Integer total = Integer.parseInt(totalStr);
                 if (total > 0) {
+                    List<Callable<Object>> tasks = new ArrayList<>();
                     int digit = CommonUtil.countDigit(total);
                     String pattern = "/%0" + digit + "d";
                     for (int i = 0; i<total; i++) {
                         String requestId = reqId + String.format(pattern, i);
                         int n = Randomizer.random(2, 45);
-                        try {
-                            if (n % 2 == 0) {
-                                list.add(this.calculator.calc(n));
-                            } else {
-                                list.add(this.calculator.calc(new FibonacciInputItem(n, requestId)));
+                        tasks.add(new Callable() {
+                            @Override
+                            public Object call() throws Exception {
+                                try {
+                                    if (n % 2 == 0) {
+                                        return calculator.calc(n);
+                                    } else {
+                                        return calculator.calc(new FibonacciInputItem(n, requestId));
+                                    }
+                                } catch (Exception e) {
+                                    return OpflowUtil.buildOrderedMap()
+                                            .put("number", n)
+                                            .put("errorClass", e.getClass().getName())
+                                            .put("errorMessage", e.getMessage())
+                                            .toMap();
+                                }
                             }
-                        } catch (Exception e) {
-                            list.add(OpflowUtil.buildOrderedMap()
-                                    .put("number", n)
-                                    .put("errorClass", e.getClass().getName())
-                                    .put("errorMessage", e.getMessage())
-                                    .toMap());
-                        }
+                        });
+                    }
+                    List<Future<Object>> futures = executor.invokeAll(tasks);
+                    for (Future<Object> future: futures) {
+                        list.add(future.get());
                     }
                 }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
@@ -250,7 +268,12 @@ public class FibonacciMaster implements AutoCloseable {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
                 exchange.getResponseSender().send(exception.toString());
-            }
+            } finally {
+                if (executor != null) {
+                    executor.shutdown();
+                    executor.awaitTermination(1, TimeUnit.SECONDS);
+                }
+            }            
         }
     }
 }
