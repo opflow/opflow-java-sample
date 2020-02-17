@@ -3,7 +3,6 @@ package com.devebot.opflow.sample;
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowUUID;
-import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.exception.OpflowRequestSuspendException;
@@ -18,6 +17,7 @@ import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
 import com.devebot.opflow.sample.utils.CommonUtil;
 import com.devebot.opflow.sample.utils.Randomizer;
 import com.devebot.opflow.supports.OpflowJsonTool;
+import com.devebot.opflow.supports.OpflowObjectTree;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -134,7 +134,7 @@ public class FibonacciMaster implements AutoCloseable {
             } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
-                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                exchange.getResponseSender().send(OpflowObjectTree.buildMap()
                         .put("name", exception.getClass().getName())
                         .put("message", exception.getMessage())
                         .toString(true));
@@ -176,7 +176,7 @@ public class FibonacciMaster implements AutoCloseable {
             catch (OpflowRequestSuspendException e) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
                 exchange.setStatusCode(530);
-                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                exchange.getResponseSender().send(OpflowObjectTree.buildMap()
                         .put("reason", "suspend")
                         .put("message", e.getMessage())
                         .toString(true));
@@ -184,7 +184,7 @@ public class FibonacciMaster implements AutoCloseable {
             catch (OpflowRequestTimeoutException e) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
                 exchange.setStatusCode(598);
-                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                exchange.getResponseSender().send(OpflowObjectTree.buildMap()
                         .put("reason", "timeout")
                         .put("message", e.getMessage())
                         .toString(true));
@@ -192,7 +192,7 @@ public class FibonacciMaster implements AutoCloseable {
             catch (OpflowWorkerNotFoundException e) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
                 exchange.setStatusCode(404);
-                exchange.getResponseSender().send(OpflowUtil.buildOrderedMap()
+                exchange.getResponseSender().send(OpflowObjectTree.buildMap()
                         .put("reason", "disabled")
                         .put("message", e.getMessage())
                         .toString(true));
@@ -248,7 +248,7 @@ public class FibonacciMaster implements AutoCloseable {
                                         return calculator.calc(new FibonacciInputItem(n, requestId));
                                     }
                                 } catch (Exception e) {
-                                    return OpflowUtil.buildOrderedMap()
+                                    return OpflowObjectTree.buildMap()
                                             .put("number", n)
                                             .put("errorClass", e.getClass().getName())
                                             .put("errorMessage", e.getMessage())
