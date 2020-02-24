@@ -67,7 +67,7 @@ public class FibonacciMaster implements AutoCloseable {
         PathTemplateHandler ptHandler = Handlers.pathTemplate()
                 .add("/alert", new BlockingHandler(this.alertHandler))
                 .add("/fibonacci/{number}", this.calcHandler)
-                .add("/random/{total}", this.randomHandler);
+                .add("/random/{total}", new BlockingHandler(this.randomHandler));
         return ptHandler;
     }
 
@@ -222,22 +222,51 @@ public class FibonacciMaster implements AutoCloseable {
             if (reqId == null) {
                 reqId = OpflowUUID.getBase64ID();
             }
-            // get the number
-            PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
-            String totalStr = pathMatch.getParameters().get("total");
-            System.out.println("[+] Make a RPC call with number: " + totalStr);
             try {
-                executor = Executors.newFixedThreadPool(150);
+                PathTemplateMatch pathMatch = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY);
+                String totalStr = pathMatch.getParameters().get("total");
+                System.out.println("[+] Make a RPC call with number: " + totalStr);
+                Integer total = Integer.parseInt(totalStr);
+                
+                RandomOptions opts = null;
+                String method = exchange.getRequestMethod().toString();
+                switch (method) {
+                    case "PUT":
+                        opts = OpflowJsonTool.toObject(exchange.getInputStream(), RandomOptions.class);
+                        break;
+                }
+                if (opts == null) {
+                    opts = new RandomOptions();
+                }
+
+                if (opts.getExceptionTotal() > total) {
+                    throw new IllegalArgumentException("exceptionTotal[" + opts.getExceptionTotal() + "] is greater than total[" + total + "]");
+                }
+
+                executor = Executors.newFixedThreadPool(opts.getConcurrentCalls());
 
                 List<Object> list = new ArrayList<>();
-                Integer total = Integer.parseInt(totalStr);
                 if (total > 0) {
                     List<Callable<Object>> tasks = new ArrayList<>();
+                    int exceptionCount = 0;
                     int digit = CommonUtil.countDigit(total);
                     String pattern = "/%0" + digit + "d";
                     for (int i = 0; i<total; i++) {
                         String requestId = reqId + String.format(pattern, i);
-                        int n = Randomizer.random(2, 45);
+                        int m = Randomizer.random(2, 45);
+                        int remains = opts.getExceptionTotal() - exceptionCount;
+                        if (0 < remains) {
+                            if (remains < (total - i)) {
+                                if (m % 2 != 0) {
+                                    m = 100;
+                                    exceptionCount++;
+                                }
+                            } else {
+                                m = 100;
+                                exceptionCount++;
+                            }
+                        }
+                        int n = m;
                         tasks.add(new Callable() {
                             @Override
                             public Object call() throws Exception {
@@ -264,7 +293,7 @@ public class FibonacciMaster implements AutoCloseable {
                 }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsonTool.toString(list, true));
-            } catch (NumberFormatException exception) {
+            } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
                 exchange.getResponseSender().send(exception.toString());
@@ -274,6 +303,29 @@ public class FibonacciMaster implements AutoCloseable {
                     executor.awaitTermination(1, TimeUnit.SECONDS);
                 }
             }            
+        }
+    }
+    
+    static class RandomOptions {
+        private int concurrentCalls = 100;
+        private int exceptionTotal = 0;
+
+        public RandomOptions() {
+        }
+
+        public RandomOptions(int concurrentCalls, int exceptionTotal) {
+            if (concurrentCalls > 0) {
+                this.concurrentCalls = concurrentCalls;
+            }
+            this.exceptionTotal = exceptionTotal;
+        }
+
+        public int getConcurrentCalls() {
+            return concurrentCalls;
+        }
+
+        public int getExceptionTotal() {
+            return exceptionTotal;
         }
     }
 }
