@@ -227,7 +227,7 @@ public class FibonacciMaster implements AutoCloseable {
             String totalStr = pathMatch.getParameters().get("total");
             System.out.println("[+] Make a RPC call with number: " + totalStr);
             try {
-                executor = Executors.newFixedThreadPool(200);
+                executor = Executors.newFixedThreadPool(150);
 
                 List<Object> list = new ArrayList<>();
                 Integer total = Integer.parseInt(totalStr);
