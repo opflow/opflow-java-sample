@@ -68,7 +68,7 @@ docker run -it --rm \
   -p 8989:8989 \
   --network=opflow-dev-net \
   --name=opflow-java-sample-master \
-  opwire/opflow-java-sample-master:0.1.28 java \
+  opwire/opflow-java-sample-master:latest java \
     -Dlog4j.configuration=file:/app/config/log4j.properties \
     -Dlog4j.appender.opflowAMQP.enabled=true \
     -Dlog4j.appender.opflowAMQP.host=opflow-rabbitmq-server \
@@ -94,7 +94,7 @@ For the workers:
 docker run -it --rm \
   --network=opflow-dev-net \
   --name=opflow-java-sample-worker \
-  opwire/opflow-java-sample-worker:0.1.28 java \
+  opwire/opflow-java-sample-worker:latest java \
     -Dlog4j.configuration=file:/app/config/log4j.properties \
     -Dlog4j.appender.opflowAMQP.enabled=true \
     -Dlog4j.appender.opflowAMQP.host=opflow-rabbitmq-server \
@@ -170,7 +170,7 @@ opflow.uri=amqp://opuser:qwerty@opflow-rabbitmq-server/opflow
 Compile `opflow-java-sample-worker` and start the worker (worker):
 
 ```shell
-mvn clean compile exec:java -Pserver -Dfibonacci.calc.delay.min=5 -Dfibonacci.calc.delay.max=10
+mvn clean compile exec:java -Pworker -Dfibonacci.calc.delay.min=5 -Dfibonacci.calc.delay.max=10
 ```
 
 ### Run the master
