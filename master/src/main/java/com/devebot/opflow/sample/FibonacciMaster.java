@@ -17,6 +17,7 @@ import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
 import com.devebot.opflow.sample.utils.CommonUtil;
 import com.devebot.opflow.sample.utils.Randomizer;
 import com.devebot.opflow.supports.OpflowJsonTool;
+import com.devebot.opflow.supports.OpflowNetTool;
 import com.devebot.opflow.supports.OpflowObjectTree;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
@@ -82,10 +83,15 @@ public class FibonacciMaster implements AutoCloseable {
     
     public static void main(String[] argv) throws Exception {
         try {
+            final Integer port = OpflowNetTool.detectFreePort(8888, 8899);
+            if (port == null) {
+                System.err.println("[*] There is no free port in the range 8888 - 8899!");
+                System.exit(-1);
+            }
             final FibonacciMaster master = new FibonacciMaster();
                     final GracefulShutdownHandler shutdownHander = new GracefulShutdownHandler(master.getPathTemplateHandler());
             final Undertow server = Undertow.builder()
-                    .addHttpListener(8888, "0.0.0.0")
+                    .addHttpListener(port, "0.0.0.0")
                     .setHandler(shutdownHander)
                     .build();
             Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -107,7 +113,7 @@ public class FibonacciMaster implements AutoCloseable {
             });
             master.serve();
             server.start();
-            System.out.println("[*] Listening for HTTP on 0.0.0.0:8888");
+            System.out.println("[*] Listening for HTTP on 0.0.0.0:" + port);
         }
         catch (OpflowConnectionException e) {
             System.err.println("[*] Invalid connection parameters or the RabbitMQ Server not available");
