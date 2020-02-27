@@ -162,7 +162,7 @@ public class FibonacciMaster implements AutoCloseable {
             
             System.out.println("[+] Make a RPC call with number: " + number + " with requestId: " + requestId);
             if (LOG.isDebugEnabled()) {
-                LOG.debug(MessageFormat.format("Request[{0}] - calc({1}) with number: {2}", 
+                LOG.debug(MessageFormat.format("Fibonacci[{0}] - calc({1}) with number: {2}", 
                         new Object[] {
                             data.getRequestId(), FibonacciInputItem.class.getCanonicalName(), data.getNumber()
                         }));

@@ -45,7 +45,7 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
     @Override
     public FibonacciOutputItem calc(FibonacciInputItem data) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug(MessageFormat.format("Request[{0}] - calc({1}) with number: {2}", 
+            LOG.debug(MessageFormat.format("Fibonacci[{0}] - calc({1}) with number: {2}", 
                     new Object[] {
                         data.getRequestId(), FibonacciInputItem.class.getCanonicalName(), data.getNumber()
                     }));
@@ -56,7 +56,7 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
     @Override
     public FibonacciOutputList calc(FibonacciInputList list) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug(MessageFormat.format("Request[{0}] - calc({1})", 
+            LOG.debug(MessageFormat.format("Fibonacci[{0}] - calc({1})", 
                     new Object[] {
                         list.getRequestId(), FibonacciInputList.class.getCanonicalName()
                     }));

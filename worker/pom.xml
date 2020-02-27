@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-worker</artifactId>
-    <version>0.1.29</version>
+    <version>0.1.30</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -87,6 +87,10 @@
                         <configuration>
                             <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
                             <systemProperties>
+                                <property>
+                                    <key>OPFLOW_AMQP_PROTOCOL_VERSION</key>
+                                    <value>0</value>
+                                </property>
                                 <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>
                                     <value>true</value>
@@ -187,6 +191,36 @@
         </profile>
         <profile>
             <id>bundle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <archive>
+                                        <manifest>
+                                            <mainClass>com.devebot.opflow.sample.FibonacciWorker</mainClass>
+                                        </manifest>
+                                    </archive>
+                                    <descriptorRefs>
+                                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                                    </descriptorRefs>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>docker</id>
             <build>
                 <plugins>
                     <plugin>

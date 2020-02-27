@@ -81,6 +81,9 @@ docker run -it --rm \
     -Dopflow.commander.password=qwerty \
     -Dopflow.commander.virtualHost=opflow \
     -Dopflow.commander.applicationId=FibonacciGenerator \
+    -Dopflow.commander.speedMeter.active=true \
+    -Dopflow.commander.speedMeter.interval=3000 \
+    -Dopflow.commander.speedMeter.length=10 \
     -Dopflow.commander.rpcWatcher.enabled=false \
     -Dopflow.commander.rpcWatcher.interval=5000 \
     -jar /app/opflow-java-sample-master.jar
