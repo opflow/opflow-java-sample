@@ -2,7 +2,6 @@ package com.devebot.opflow.sample.bdd.steps;
 
 import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowBuilder;
-import com.devebot.opflow.OpflowUtil;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
 import com.devebot.opflow.sample.models.FibonacciInputItem;
@@ -10,6 +9,7 @@ import com.devebot.opflow.sample.models.FibonacciInputList;
 import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.models.FibonacciOutputList;
 import com.devebot.opflow.supports.OpflowJsonTool;
+import com.devebot.opflow.supports.OpflowStringUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
@@ -76,7 +76,7 @@ public class FibonacciMasterSteps {
             @Named("numbers") final String numbers) throws OpflowBootstrapException {
         FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
         FibonacciInputList list = new FibonacciInputList();
-        Integer[] integers = OpflowUtil.splitByComma(numbers, Integer.class);
+        Integer[] integers = OpflowStringUtil.splitByComma(numbers, Integer.class);
         for(Integer integer: integers) {
             list.add(new FibonacciInputItem(integer));
         }

@@ -89,7 +89,11 @@
                             <systemProperties>
                                 <property>
                                     <key>OPFLOW_AMQP_PROTOCOL_VERSION</key>
-                                    <value>0</value>
+                                    <value>1</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_LEGACY_PINGPONG</key>
+                                    <value>false</value>
                                 </property>
                                 <property>
                                     <key>OPFLOW_TEMPLATE_APPLIED</key>
@@ -98,6 +102,10 @@
                                 <property>
                                     <key>OPFLOW_TAGS_EMBEDDABLE</key>
                                     <value>false</value>
+                                </property>
+                                <property>
+                                    <key>OPFLOW_OMIT_PING_LOGS</key>
+                                    <value>true</value>
                                 </property>
                             </systemProperties>
                         </configuration>
