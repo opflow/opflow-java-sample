@@ -1,6 +1,6 @@
 package com.devebot.opflow.sample.services;
 
-import com.devebot.opflow.OpflowJsontool;
+import com.devebot.opflow.supports.OpflowJsonTool;
 import com.devebot.opflow.sample.models.AlertMessage;
 
 /**
@@ -11,6 +11,6 @@ public class AlertSenderImpl implements AlertSender {
 
     @Override
     public void notify(AlertMessage note) {
-        System.out.println("[-] AlertMessage: " + OpflowJsontool.toString(note));
+        System.out.println("[-] AlertMessage: " + OpflowJsonTool.toString(note));
     }
 }
