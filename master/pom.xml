@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-master</artifactId>
-    <version>0.1.31</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -11,6 +11,7 @@
         <artifact.name>${project.artifactId}</artifact.name>
         <java.version>1.8</java.version>
         <opflow.version>${project.version}</opflow.version>
+        <opflow-prom-exporter.version>0.2.0</opflow-prom-exporter.version>
         <opflow-sample.version>${project.version}</opflow-sample.version>
     </properties>
 
@@ -41,6 +42,11 @@
             <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-core</artifactId>
             <version>${opflow.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.devebot.opflow</groupId>
+            <artifactId>opflow-prom-exporter</artifactId>
+            <version>${opflow-prom-exporter.version}</version>
         </dependency>
         <dependency>
             <groupId>com.devebot.opflow</groupId>

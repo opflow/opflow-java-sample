@@ -2,6 +2,7 @@ package com.devebot.opflow.sample;
 
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
+import com.devebot.opflow.OpflowPromExporter;
 import com.devebot.opflow.OpflowUUID;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
@@ -56,6 +57,7 @@ public class FibonacciMaster implements AutoCloseable {
     private final RandomHandler randomHandler;
 
     FibonacciMaster() throws OpflowBootstrapException {
+        OpflowPromExporter.hook();
         this.commander = OpflowBuilder.createCommander("master.properties");
         this.alertSender = commander.registerType(AlertSender.class);
         this.alertHandler = new AlertHandler(this.alertSender);
