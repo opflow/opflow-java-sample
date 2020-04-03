@@ -296,7 +296,14 @@ public class FibonacciMaster implements AutoCloseable {
                     }
                     List<Future<Object>> futures = executor.invokeAll(tasks);
                     for (Future<Object> future: futures) {
-                        list.add(future.get());
+                        Object result = future.get();
+                        if (opts.isReturnErrorOnly()) {
+                            if (!(result instanceof FibonacciOutputItem)) {
+                                list.add(result);
+                            }
+                        } else {
+                            list.add(result);
+                        }
                     }
                 }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
@@ -317,6 +324,7 @@ public class FibonacciMaster implements AutoCloseable {
     static class RandomOptions {
         private int concurrentCalls = 100;
         private int exceptionTotal = 0;
+        private boolean returnErrorOnly = false;
 
         public RandomOptions() {
         }
@@ -334,6 +342,10 @@ public class FibonacciMaster implements AutoCloseable {
 
         public int getExceptionTotal() {
             return exceptionTotal;
+        }
+
+        public boolean isReturnErrorOnly() {
+            return returnErrorOnly;
         }
     }
 }
