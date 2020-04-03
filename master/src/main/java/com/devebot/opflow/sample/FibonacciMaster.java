@@ -6,7 +6,7 @@ import com.devebot.opflow.OpflowPromExporter;
 import com.devebot.opflow.OpflowUUID;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
-import com.devebot.opflow.exception.OpflowRequestSuspendException;
+import com.devebot.opflow.exception.OpflowServiceNotReadyException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
 import com.devebot.opflow.exception.OpflowWorkerNotFoundException;
 import com.devebot.opflow.sample.models.AlertMessage;
@@ -181,7 +181,7 @@ public class FibonacciMaster implements AutoCloseable {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                 exchange.getResponseSender().send(OpflowJsonTool.toString(output));
             }
-            catch (OpflowRequestSuspendException e) {
+            catch (OpflowServiceNotReadyException e) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/json");
                 exchange.setStatusCode(530);
                 exchange.getResponseSender().send(OpflowObjectTree.buildMap()
