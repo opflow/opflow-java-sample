@@ -38,6 +38,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -253,7 +254,7 @@ public class FibonacciMaster implements AutoCloseable {
 
                 executor = Executors.newFixedThreadPool(opts.getConcurrentCalls());
 
-                List<Object> list = new ArrayList<>();
+                final RandomResult store = new RandomResult();
                 if (total > 0) {
                     List<Callable<Object>> tasks = new ArrayList<>();
                     int exceptionCount = 0;
@@ -278,6 +279,7 @@ public class FibonacciMaster implements AutoCloseable {
                         tasks.add(new Callable() {
                             @Override
                             public Object call() throws Exception {
+                                store.total.incrementAndGet();
                                 try {
                                     if (n % 2 == 0) {
                                         return calculator.calc(n);
@@ -285,6 +287,7 @@ public class FibonacciMaster implements AutoCloseable {
                                         return calculator.calc(new FibonacciInputItem(n, requestId));
                                     }
                                 } catch (Exception e) {
+                                    store.errorsTotal.incrementAndGet();
                                     return OpflowObjectTree.buildMap()
                                             .put("number", n)
                                             .put("errorClass", e.getClass().getName())
@@ -299,15 +302,15 @@ public class FibonacciMaster implements AutoCloseable {
                         Object result = future.get();
                         if (opts.isReturnErrorOnly()) {
                             if (!(result instanceof FibonacciOutputItem)) {
-                                list.add(result);
+                                store.output.add(result);
                             }
                         } else {
-                            list.add(result);
+                            store.output.add(result);
                         }
                     }
                 }
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                exchange.getResponseSender().send(OpflowJsonTool.toString(list, true));
+                exchange.getResponseSender().send(OpflowJsonTool.toString(store, true));
             } catch (Exception exception) {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                 exchange.setStatusCode(500);
@@ -319,6 +322,12 @@ public class FibonacciMaster implements AutoCloseable {
                 }
             }            
         }
+    }
+    
+    static class RandomResult {
+        protected AtomicInteger total = new AtomicInteger(0);
+        protected AtomicInteger errorsTotal = new AtomicInteger(0);
+        List<Object> output = new ArrayList<>();
     }
     
     static class RandomOptions {
