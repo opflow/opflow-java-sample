@@ -14,14 +14,15 @@ public class FibonacciWorker {
     public static void main(String[] argv) throws Exception {
         try {
             System.out.println("[+] FibonacciWorker start:");
-            final OpflowServerlet worker = OpflowBuilder.createServerlet("worker.properties");
-            worker.instantiateType(AlertSenderImpl.class);
-            worker.instantiateType(FibonacciCalculatorImpl.class);
-            worker.start();
+            final OpflowServerlet serverlet = OpflowBuilder.createServerlet("worker.properties");
+            serverlet.instantiateType(AlertSenderImpl.class);
+            serverlet.instantiateType(FibonacciCalculatorImpl.class);
+            serverlet.serve();
             System.out.println("[*] Waiting for message. To exit press CTRL+C");
         }
         catch (OpflowConnectionException e) {
             System.err.println("[*] Invalid connection parameters or the RabbitMQ Server not available");
+            Runtime.getRuntime().exit(1);
         }
     }
 }

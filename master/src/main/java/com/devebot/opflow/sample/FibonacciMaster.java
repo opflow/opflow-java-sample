@@ -20,6 +20,7 @@ import com.devebot.opflow.sample.utils.Randomizer;
 import com.devebot.opflow.supports.OpflowJsonTool;
 import com.devebot.opflow.supports.OpflowNetTool;
 import com.devebot.opflow.supports.OpflowObjectTree;
+import com.devebot.opflow.supports.OpflowStringUtil;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -259,9 +260,8 @@ public class FibonacciMaster implements AutoCloseable {
                     List<Callable<Object>> tasks = new ArrayList<>();
                     int exceptionCount = 0;
                     int digit = CommonUtil.countDigit(total);
-                    String pattern = "/%0" + digit + "d";
                     for (int i = 0; i<total; i++) {
-                        String requestId = reqId + String.format(pattern, i);
+                        String requestId = reqId + "/" + OpflowStringUtil.pad(i, digit);
                         int m = Randomizer.random(2, 45);
                         int remains = opts.getExceptionTotal() - exceptionCount;
                         if (0 < remains) {
