@@ -3,12 +3,15 @@ package com.devebot.opflow.sample.business;
 import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.utils.CommonUtil;
 import com.devebot.opflow.sample.utils.Randomizer;
+import com.devebot.opflow.supports.OpflowConfigUtil;
+import com.devebot.opflow.supports.OpflowConverter;
 
 /**
  *
  * @author drupalex
  */
 public class FibonacciGenerator {
+    private final int fibonacciNumberLimit;
     private int n;
     private int c = 0;
     private long f = 0, f_1 = 0, f_2 = 0;
@@ -24,12 +27,16 @@ public class FibonacciGenerator {
     }
     
     public FibonacciGenerator(int number, int min, int max) {
+        fibonacciNumberLimit = OpflowConverter.convert(OpflowConfigUtil.getConfigValue("fibonacciNumberLimit", "50"), Integer.class);
+
         if (number < 0) {
             throw new IllegalArgumentException();
         }
-        if (number > 50) {
-            throw new IllegalArgumentException();
+
+        if (number > fibonacciNumberLimit) {
+            throw new IllegalArgumentException("The number exceeds the limit (" + fibonacciNumberLimit + ")");
         }
+
         this.n = number;
         this.m = min;
         this.M = max;
