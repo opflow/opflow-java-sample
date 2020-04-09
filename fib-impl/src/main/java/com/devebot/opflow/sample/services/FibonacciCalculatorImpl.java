@@ -8,7 +8,7 @@ import com.devebot.opflow.sample.models.FibonacciOutputItem;
 import com.devebot.opflow.sample.models.FibonacciOutputList;
 import com.devebot.opflow.sample.utils.Randomizer;
 import com.devebot.opflow.supports.OpflowConverter;
-import com.devebot.opflow.supports.OpflowEnvTool;
+import com.devebot.opflow.supports.OpflowConfigUtil;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,14 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
     private final int delayMax;
     
     public FibonacciCalculatorImpl() {
-        delayMin = OpflowConverter.convert(OpflowEnvTool.instance.getSystemProperty("fibonacci.calc.delay.min", "0"), Integer.class);
-        delayMax = OpflowConverter.convert(OpflowEnvTool.instance.getSystemProperty("fibonacci.calc.delay.max", "0"), Integer.class);
+        delayMin = OpflowConverter.convert(OpflowConfigUtil.getConfigValue("fibonacciCalcDelayMin", "0"), Integer.class);
+        delayMax = OpflowConverter.convert(OpflowConfigUtil.getConfigValue("fibonacciCalcDelayMax", "0"), Integer.class);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(MessageFormat.format("Fibonaccicalc() will be delay between: {0} and {1}", 
+                new Object[] {
+                    delayMin, delayMax
+                }));
+        }
     }
 
     @Override
