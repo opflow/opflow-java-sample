@@ -55,6 +55,8 @@ public class FibonacciMaster implements AutoCloseable {
     private final AlertSender alertSender;
     private final AlertHandler alertHandler;
     private final FibonacciCalculator calculator;
+    private final FibonacciCalculator clonedCalculator;
+    private final FibonacciCalculator sharedCalculator;
     private final CalcHandler calcHandler;
     private final RandomHandler randomHandler;
 
@@ -64,6 +66,8 @@ public class FibonacciMaster implements AutoCloseable {
         this.alertSender = commander.registerType(AlertSender.class);
         this.alertHandler = new AlertHandler(this.alertSender);
         this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
+        this.clonedCalculator = commander.registerType("clonedCalc", FibonacciCalculator.class, new FibonacciCalculatorImpl());
+        this.sharedCalculator = commander.registerType("sharedCalc", FibonacciCalculator.class, new FibonacciCalculatorImpl());
         this.calcHandler = new CalcHandler(this.calculator);
         this.randomHandler = new RandomHandler(this.calculator);
     }
