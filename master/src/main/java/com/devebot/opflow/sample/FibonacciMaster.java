@@ -62,12 +62,13 @@ public class FibonacciMaster implements AutoCloseable {
 
     FibonacciMaster() throws OpflowBootstrapException {
         OpflowPromExporter.hook();
+        FibonacciCalculator calcImpl = new FibonacciCalculatorImpl();
         this.commander = OpflowBuilder.createCommander("master.properties");
         this.alertSender = commander.registerType(AlertSender.class);
         this.alertHandler = new AlertHandler(this.alertSender);
-        this.calculator = commander.registerType(FibonacciCalculator.class, new FibonacciCalculatorImpl());
-        this.clonedCalculator = commander.registerType("clonedCalc", FibonacciCalculator.class, new FibonacciCalculatorImpl());
-        this.sharedCalculator = commander.registerType("sharedCalc", FibonacciCalculator.class, new FibonacciCalculatorImpl());
+        this.calculator = commander.registerType(FibonacciCalculator.class, calcImpl);
+        this.clonedCalculator = commander.registerType("clonedCalc", FibonacciCalculator.class, calcImpl);
+        this.sharedCalculator = commander.registerType("sharedCalc", FibonacciCalculator.class, calcImpl);
         this.calcHandler = new CalcHandler(this.calculator);
         this.randomHandler = new RandomHandler(this.calculator);
     }
