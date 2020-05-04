@@ -103,7 +103,6 @@
                         <configuration>
                             <mainClass>com.devebot.opflow.sample.FibonacciMaster</mainClass>
                             <environmentVariables>
-                                <JAVA_SECRET_VAULT_PASSWORD_FILE>${project.build.directory}/classes/passwd.txt</JAVA_SECRET_VAULT_PASSWORD_FILE>
                                 <OPFLOW_ROOT_CREDENTIALS>master:$2y$05$ThumO170WMRFpu5CZrogq.ZcudHI3OOUSPM4QRigWwRu7PF2bt4LS</OPFLOW_ROOT_CREDENTIALS>
                                 <OPFLOW_AMQP_PROTOCOL_VERSION>1</OPFLOW_AMQP_PROTOCOL_VERSION>
                                 <OPFLOW_LEGACY_SUPPORTED>true</OPFLOW_LEGACY_SUPPORTED>

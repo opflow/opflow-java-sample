@@ -166,8 +166,26 @@ Open a new `terminal` and change to `opflow-java-sample/worker` directory.
 Update the rabbitmq connection parameters in `src/main/resources/worker.properties`:
 
 ```properties
-opflow.uri=amqp://opuser:qwerty@opflow-rabbitmq-server/opflow
+opflow.serverlet.host=opflow-rabbitmq-server
 # ...
+```
+
+With the encrypted password:
+
+```shell
+export OPFLOW_SERVERLET_AMQPWORKER_PASSWORD=$(cat <<EOF
+\$ANSIBLE_VAULT;1.1;AES256
+37643663313636313239313266633633363065333338333339363736626139376330633233656334
+6139396436646133613538323937353963646634393136380a333137333065343331656139366238
+32346238333965366330393139366235323162353131363335643762663034393937646664353733
+3831333236626335630a313937373937363866303034333765633361393138623030646338336230
+3963
+EOF
+)
+```
+
+```shell
+export JAVA_SECRET_VAULT_PASSWORD_FILE=$PWD/target/classes/passwd.txt
 ```
 
 Compile `opflow-java-sample-worker` and start the worker (worker):
@@ -182,8 +200,26 @@ Open a new `terminal` and change to `opflow-java-sample/master` directory.
 Update the rabbitmq connection parameters in `src/main/resources/master.properties`:
 
 ```properties
-opflow.uri=amqp://opuser:qwerty@opflow-rabbitmq-server/opflow
+opflow.commander.host=opflow-rabbitmq-server
 # ...
+```
+
+With the encrypted password:
+
+```shell
+export OPFLOW_COMMANDER_AMQPMASTER_PASSWORD=$(cat <<EOF
+\$ANSIBLE_VAULT;1.1;AES256
+37643663313636313239313266633633363065333338333339363736626139376330633233656334
+6139396436646133613538323937353963646634393136380a333137333065343331656139366238
+32346238333965366330393139366235323162353131363335643762663034393937646664353733
+3831333236626335630a313937373937363866303034333765633361393138623030646338336230
+3963
+EOF
+)
+```
+
+```shell
+export JAVA_SECRET_VAULT_PASSWORD_FILE=$PWD/target/classes/passwd.txt
 ```
 
 Compile `opflow-java-sample-master` and start the web service on master:
