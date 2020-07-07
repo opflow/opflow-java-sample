@@ -3,15 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.devebot.opflow</groupId>
     <artifactId>opflow-java-sample-master</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.3.1</version>
     <packaging>jar</packaging>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <artifact.name>${project.artifactId}</artifact.name>
         <java.version>1.8</java.version>
         <opflow.version>${project.version}</opflow.version>
-        <opflow-prom-exporter.version>0.2.0</opflow-prom-exporter.version>
+        <opflow-prom-exporter.version>0.3.0</opflow-prom-exporter.version>
         <opflow-sample.version>${project.version}</opflow-sample.version>
     </properties>
 
