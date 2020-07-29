@@ -24,7 +24,7 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciCalculatorImpl.class);
     private final int delayMin;
     private final int delayMax;
-    
+
     public FibonacciCalculatorImpl() {
         delayMin = OpflowConverter.convert(OpflowConfigUtil.getConfigValue("fibonacciCalcDelayMin", "0"), Integer.class);
         delayMax = OpflowConverter.convert(OpflowConfigUtil.getConfigValue("fibonacciCalcDelayMax", "0"), Integer.class);
@@ -73,5 +73,10 @@ public class FibonacciCalculatorImpl implements FibonacciCalculator {
             results.add(this.calc(input.getNumber()));
         }
         return new FibonacciOutputList(results);
+    }
+
+    @Override
+    public FibonacciOutputList calc(List<FibonacciInputItem> list) {
+        return this.calc(new FibonacciInputList(list));
     }
 }

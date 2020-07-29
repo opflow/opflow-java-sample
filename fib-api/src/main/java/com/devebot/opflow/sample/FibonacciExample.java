@@ -43,6 +43,11 @@ public class FibonacciExample {
             }
             return new FibonacciOutputList(results);
         }
+        
+        @Override
+        public FibonacciOutputList calc(List<FibonacciInputItem> list) {
+            return this.calc(new FibonacciInputList(list));
+        }
     }
     
     private static class FibonacciGenerator {

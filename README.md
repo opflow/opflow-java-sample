@@ -55,6 +55,30 @@ The connection for logging flow:
 * Virtual host (vHost): oplogs;
 * Set full permissions for the user `logger` to the vHost `oplogs`;
 
+### Using the SNAPSHOT
+
+Enable snapshots in repository config (~/.m2/settings.xml):
+
+```xml
+<settings>
+  <profiles>
+    <profile>
+      <repositories>
+        <repository>
+          <id>oss.sonatype.org-snapshot</id>
+          <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+</settings>
+```
 
 ## Quickstarts
 

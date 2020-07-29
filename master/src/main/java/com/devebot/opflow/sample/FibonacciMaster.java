@@ -286,10 +286,15 @@ public class FibonacciMaster implements AutoCloseable {
                             public Object call() throws Exception {
                                 store.total.incrementAndGet();
                                 try {
-                                    if (n % 2 == 0) {
-                                        return calculator.calc(n);
-                                    } else {
-                                        return calculator.calc(new FibonacciInputItem(n, requestId));
+                                    switch (n % 3) {
+                                        case 0:
+                                            return calculator.calc(n);
+                                        case 1:
+                                            return calculator.calc(new FibonacciInputItem(n, requestId));
+                                        default:
+                                            ArrayList<FibonacciInputItem> list = new ArrayList<>();
+                                            list.add(new FibonacciInputItem(n, requestId));
+                                            return calculator.calc(list);
                                     }
                                 } catch (Exception e) {
                                     store.errorsTotal.incrementAndGet();
