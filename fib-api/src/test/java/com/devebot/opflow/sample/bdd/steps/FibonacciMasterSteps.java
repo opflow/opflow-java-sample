@@ -59,13 +59,13 @@ public class FibonacciMasterSteps {
     @Given("a registered FibonacciCalculator interface in Commander named '$commanderName'")
     public void instantiateFibonacciCalculator(@Named("commanderName") final String commanderName)
             throws OpflowBootstrapException {
-        commanders.get(commanderName).registerType(FibonacciCalculator.class);
+        commanders.get(commanderName).registerTypeWithDefault(FibonacciCalculator.class);
     }
     
     @When("I send a request to Commander '$commanderName' to calculate fibonacci of '$number'")
     public void callCommanderCalc(@Named("commanderName") final String commanderName,
             @Named("number") final int number) throws OpflowBootstrapException {
-        FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
+        FibonacciCalculator calculator = commanders.get(commanderName).registerTypeWithDefault(FibonacciCalculator.class);
         FibonacciOutputItem result = calculator.calc(new FibonacciInputItem(number));
         if (LOG.isDebugEnabled()) LOG.debug("FibonacciOutput: " + OpflowJsonTool.toString(result));
         getContext(commanderName).put("output", result);
@@ -74,7 +74,7 @@ public class FibonacciMasterSteps {
     @When("I send a request to Commander '$commanderName' to calculate fibonacci of a list of '$numbers'")
     public void callCommanderCalc(@Named("commanderName") final String commanderName,
             @Named("numbers") final String numbers) throws OpflowBootstrapException {
-        FibonacciCalculator calculator = commanders.get(commanderName).registerType(FibonacciCalculator.class);
+        FibonacciCalculator calculator = commanders.get(commanderName).registerTypeWithDefault(FibonacciCalculator.class);
         FibonacciInputList list = new FibonacciInputList();
         Integer[] integers = OpflowStringUtil.splitByComma(numbers, Integer.class);
         for(Integer integer: integers) {

@@ -2,9 +2,11 @@ package com.devebot.opflow.sample;
 
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
+import com.devebot.opflow.OpflowConfig;
 import com.devebot.opflow.OpflowPromExporter;
 import com.devebot.opflow.OpflowUUID;
 import com.devebot.opflow.exception.OpflowBootstrapException;
+import com.devebot.opflow.exception.OpflowConfigValidationException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.exception.OpflowServiceNotReadyException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
@@ -34,6 +36,7 @@ import io.undertow.util.PathTemplateMatch;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,14 +62,21 @@ public class FibonacciMaster implements AutoCloseable {
     private final FibonacciCalculator sharedCalculator;
     private final CalcHandler calcHandler;
     private final RandomHandler randomHandler;
-
+    private final OpflowConfig.Validator validator = new OpflowConfig.Validator() {
+        @Override
+        public Object validate(Map<String, Object> configuration) throws OpflowConfigValidationException {
+            System.out.println(OpflowJsonTool.toString(configuration, true));
+            return null;
+        }
+    };
+    
     FibonacciMaster() throws OpflowBootstrapException {
         OpflowPromExporter.hook();
         FibonacciCalculator calcImpl = new FibonacciCalculatorImpl();
-        this.commander = OpflowBuilder.createCommander("master.properties");
-        this.alertSender = commander.registerType(AlertSender.class);
+        this.commander = OpflowBuilder.createCommander("master.properties", validator);
+        this.alertSender = commander.registerTypeWithDefault(AlertSender.class);
         this.alertHandler = new AlertHandler(this.alertSender);
-        this.calculator = commander.registerType(FibonacciCalculator.class, calcImpl);
+        this.calculator = commander.registerTypeWithDefault(FibonacciCalculator.class, calcImpl);
         this.clonedCalculator = commander.registerType("clonedCalc", FibonacciCalculator.class, calcImpl);
         this.sharedCalculator = commander.registerType("sharedCalc", FibonacciCalculator.class, calcImpl);
         this.calcHandler = new CalcHandler(this.calculator);
@@ -89,7 +99,7 @@ public class FibonacciMaster implements AutoCloseable {
     public void close() throws Exception {
         commander.close();
     }
-    
+
     public static void main(String[] argv) throws Exception {
         try {
             final Integer port = OpflowNetTool.detectFreePort(8888, 8899);
