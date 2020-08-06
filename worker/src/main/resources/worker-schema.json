@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Configuration",
+    "description": "Opflow Configuration",
+    "type": "object",
+    "properties": {
+        "amqpWorker": {
+            "$ref": "#/definitions/amqpWorker"
+        }
+    },
+    "definitions": {
+        "amqpWorker": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string",
+                    "pattern": "FibonacciGenerator"
+                }
+            },
+            "required": [ "appId" ],
+            "not": {
+                "required": [ "applicationId" ]
+            }
+        }
+    }
+}
