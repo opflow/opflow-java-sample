@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Configuration",
+    "description": "Opflow Configuration",
+    "type": "object",
+    "properties": {
+        "amqpMaster": {
+            "$ref": "#/definitions/amqpMaster"
+        },
+        "connector": {
+            "type": "object",
+            "properties": {
+                "sharedCalc": {
+                    "type": "object",
+                    "properties": {
+                        "amqpMaster": {
+                            "$ref": "#/definitions/amqpMaster"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "amqpMaster": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string",
+                    "pattern": "FibonacciGenerator"
+                }
+            },
+            "required": [ "appId" ],
+            "not": {
+                "required": [ "applicationId" ]
+            }
+        }
+    }
+}

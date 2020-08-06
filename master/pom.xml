@@ -50,6 +50,11 @@
         </dependency>
         <dependency>
             <groupId>com.devebot.opflow</groupId>
+            <artifactId>opflow-config-validator</artifactId>
+            <version>${opflow.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.devebot.opflow</groupId>
             <artifactId>opflow-java-sample-fib-api</artifactId>
             <version>${opflow-sample.version}</version>
         </dependency>

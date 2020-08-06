@@ -3,10 +3,10 @@ package com.devebot.opflow.sample;
 import com.devebot.opflow.OpflowBuilder;
 import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.OpflowConfig;
+import com.devebot.opflow.OpflowConfigValidator;
 import com.devebot.opflow.OpflowPromExporter;
 import com.devebot.opflow.OpflowUUID;
 import com.devebot.opflow.exception.OpflowBootstrapException;
-import com.devebot.opflow.exception.OpflowConfigValidationException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.exception.OpflowServiceNotReadyException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
@@ -36,7 +36,6 @@ import io.undertow.util.PathTemplateMatch;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -62,13 +61,8 @@ public class FibonacciMaster implements AutoCloseable {
     private final FibonacciCalculator sharedCalculator;
     private final CalcHandler calcHandler;
     private final RandomHandler randomHandler;
-    private final OpflowConfig.Validator validator = new OpflowConfig.Validator() {
-        @Override
-        public Object validate(Map<String, Object> configuration) throws OpflowConfigValidationException {
-            System.out.println(OpflowJsonTool.toString(configuration, true));
-            return null;
-        }
-    };
+    private final OpflowConfig.Validator validator = OpflowConfigValidator
+            .getCommanderConfigValidator(FibonacciMaster.class.getResourceAsStream("/master-schema.json"));
     
     FibonacciMaster() throws OpflowBootstrapException {
         OpflowPromExporter.hook();
