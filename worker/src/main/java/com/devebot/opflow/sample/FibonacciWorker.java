@@ -1,7 +1,6 @@
 package com.devebot.opflow.sample;
 
 import com.devebot.opflow.OpflowBuilder;
-import com.devebot.opflow.OpflowConfig;
 import com.devebot.opflow.OpflowConfigValidator;
 import com.devebot.opflow.OpflowServerlet;
 import com.devebot.opflow.exception.OpflowConnectionException;
@@ -14,11 +13,11 @@ import com.devebot.opflow.sample.services.FibonacciCalculatorImpl;
  */
 public class FibonacciWorker {
     public static void main(String[] argv) throws Exception {
-        OpflowConfig.Validator validator = OpflowConfigValidator
-            .getServerletConfigValidator(FibonacciWorker.class.getResourceAsStream("/worker-schema.json"));
         try {
             System.out.println("[+] FibonacciWorker start:");
-            final OpflowServerlet serverlet = OpflowBuilder.createServerlet("worker.properties", validator);
+            final OpflowServerlet serverlet = OpflowBuilder.createServerlet("worker.properties",
+                    OpflowConfigValidator.getServerletConfigValidator(
+                            FibonacciWorker.class.getResourceAsStream("/worker-schema.json")));
             serverlet.instantiateType(AlertSenderImpl.class);
             serverlet.instantiateType(FibonacciCalculatorImpl.class);
             serverlet.serve();
