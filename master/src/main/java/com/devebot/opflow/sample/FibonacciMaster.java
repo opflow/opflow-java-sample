@@ -7,6 +7,7 @@ import com.devebot.opflow.OpflowConfigValidator;
 import com.devebot.opflow.OpflowPromExporter;
 import com.devebot.opflow.OpflowUUID;
 import com.devebot.opflow.exception.OpflowBootstrapException;
+import com.devebot.opflow.exception.OpflowConfigValidationException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.exception.OpflowServiceNotReadyException;
 import com.devebot.opflow.exception.OpflowRequestTimeoutException;
@@ -36,6 +37,7 @@ import io.undertow.util.PathTemplateMatch;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -65,11 +67,20 @@ public class FibonacciMaster implements AutoCloseable {
     FibonacciMaster() throws OpflowBootstrapException {
         OpflowPromExporter.hook();
         FibonacciCalculator calcImpl = new FibonacciCalculatorImpl();
-
-        this.commander = OpflowBuilder.createCommander("master.properties",
-                OpflowConfigValidator.getCommanderConfigValidator(
-                        FibonacciMaster.class.getResourceAsStream("/master-schema.json")));
-
+        
+        OpflowConfig.Validator v1 = OpflowConfigValidator.getCommanderConfigValidator(
+                        FibonacciMaster.class.getResourceAsStream("/master-schema.json"));
+        
+        OpflowConfig.Validator v2 = new OpflowConfig.Validator() {
+            @Override
+            public Object validate(Map<String, Object> configuration) throws OpflowConfigValidationException {
+                // do something with configuration
+                return null;
+            }
+        };
+        
+        this.commander = OpflowBuilder.createCommander("master.properties", v1, v2);
+        
         this.alertSender = commander.registerTypeWithDefault(AlertSender.class);
         this.alertHandler = new AlertHandler(this.alertSender);
         this.calculator = commander.registerTypeWithDefault(FibonacciCalculator.class, calcImpl);
