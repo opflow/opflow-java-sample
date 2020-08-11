@@ -22,13 +22,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author acegik
  */
-public class CalcHandler implements HttpHandler {
+public class SingleHandler implements HttpHandler {
 
-    private final static Logger LOG = LoggerFactory.getLogger(CalcHandler.class);
+    private final static Logger LOG = LoggerFactory.getLogger(SingleHandler.class);
 
     private final FibonacciCalculator calculator;
 
-    public CalcHandler(FibonacciCalculator calculator) throws OpflowBootstrapException {
+    public SingleHandler(FibonacciCalculator calculator) throws OpflowBootstrapException {
         this.calculator = calculator;
     }
 

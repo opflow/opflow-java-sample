@@ -9,7 +9,7 @@ import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConfigValidationException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.sample.handlers.AlertHandler;
-import com.devebot.opflow.sample.handlers.CalcHandler;
+import com.devebot.opflow.sample.handlers.SingleHandler;
 import com.devebot.opflow.sample.handlers.RandomHandler;
 import com.devebot.opflow.sample.services.AlertSender;
 import com.devebot.opflow.sample.services.FibonacciCalculator;
@@ -38,7 +38,7 @@ public class FibonacciMaster implements AutoCloseable {
     private final FibonacciCalculator calculator;
     private final FibonacciCalculator clonedCalculator;
     private final FibonacciCalculator sharedCalculator;
-    private final CalcHandler calcHandler;
+    private final SingleHandler singleHandler;
     private final RandomHandler randomHandler;
     
     FibonacciMaster() throws OpflowBootstrapException {
@@ -63,14 +63,14 @@ public class FibonacciMaster implements AutoCloseable {
         this.calculator = commander.registerTypeWithDefault(FibonacciCalculator.class, calcImpl);
         this.clonedCalculator = commander.registerType("clonedCalc", FibonacciCalculator.class, calcImpl);
         this.sharedCalculator = commander.registerType("sharedCalc", FibonacciCalculator.class, calcImpl);
-        this.calcHandler = new CalcHandler(this.calculator);
+        this.singleHandler = new SingleHandler(this.calculator);
         this.randomHandler = new RandomHandler(this.calculator);
     }
 
     public PathTemplateHandler getPathTemplateHandler() {
         PathTemplateHandler ptHandler = Handlers.pathTemplate()
                 .add("/alert", new BlockingHandler(this.alertHandler))
-                .add("/fibonacci/{number}", this.calcHandler)
+                .add("/fibonacci/{number}", this.singleHandler)
                 .add("/random/{total}", new BlockingHandler(this.randomHandler));
         return ptHandler;
     }
