@@ -1,5 +1,7 @@
 package com.devebot.opflow.sample;
 
+import com.devebot.opflow.OpflowBuilder;
+import com.devebot.opflow.OpflowCommander;
 import com.devebot.opflow.exception.OpflowBootstrapException;
 import com.devebot.opflow.exception.OpflowConnectionException;
 import com.devebot.opflow.sample.handlers.SingleHandler;
@@ -23,10 +25,12 @@ public class FibonacciStandalone {
     
     private final static Logger LOG = LoggerFactory.getLogger(FibonacciStandalone.class);
     
+    private final OpflowCommander commander;
     private final FibonacciCalculator calculator;
     
     FibonacciStandalone() throws OpflowBootstrapException {
-        this.calculator = new FibonacciCalculatorImpl();
+        this.commander = OpflowBuilder.createCommander("master.properties");
+        this.calculator = commander.registerTypeWithDefault(FibonacciCalculator.class, new FibonacciCalculatorImpl());
     }
 
     public PathTemplateHandler getPathTemplateHandler() throws OpflowBootstrapException {
@@ -37,9 +41,15 @@ public class FibonacciStandalone {
     }
 
     public void serve() {
+        if (this.commander != null) {
+            this.commander.serve();
+        }
     }
 
     public void close() throws Exception {
+        if (this.commander != null) {
+            commander.close();
+        }
     }
 
     public static void main(String[] argv) throws Exception {
