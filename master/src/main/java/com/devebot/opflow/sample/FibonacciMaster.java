@@ -56,7 +56,11 @@ public class FibonacciMaster implements AutoCloseable {
             }
         };
         
-        this.commander = OpflowBuilder.createCommander("master.properties", v1, v2);
+        this.commander = OpflowBuilder.newCommander()
+                .setConfigFile("master.properties")
+                .addValidator(v1)
+                .addValidator(v2)
+                .build();
         
         this.alertSender = commander.registerTypeWithDefault(AlertSender.class);
         this.alertHandler = new AlertHandler(this.alertSender);

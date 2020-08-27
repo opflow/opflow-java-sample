@@ -15,9 +15,11 @@ public class FibonacciWorker {
     public static void main(String[] argv) throws Exception {
         try {
             System.out.println("[+] FibonacciWorker start:");
-            final OpflowServerlet serverlet = OpflowBuilder.createServerlet("worker.properties",
-                    OpflowConfigValidator.getServerletConfigValidator(
-                            FibonacciWorker.class.getResourceAsStream("/worker-schema.json")));
+            final OpflowServerlet serverlet = OpflowBuilder.newServerlet()
+                    .setConfigFile("worker.properties")
+                    .addValidator(OpflowConfigValidator.getServerletConfigValidator(
+                            FibonacciWorker.class.getResourceAsStream("/worker-schema.json")))
+                    .build();
             serverlet.instantiateType(AlertSenderImpl.class);
             serverlet.instantiateType(FibonacciCalculatorImpl.class);
             serverlet.serve();
